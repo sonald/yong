@@ -1124,7 +1124,7 @@ void YongShowMain(int show)
 			if(id && tip_main)
 			{
 				CaretUpdate=false;
-				y_ui_timer_add(100,ShowLangTipLater,id->lang==0?YT("ÖÐÎÄ"):YT("Ó¢ÎÄ"));
+				y_ui_timer_add(100,ShowLangTipLater,id->lang==0?YT("ä¸­æ–‡"):YT("è‹±æ–‡"));
 			}
 		}
 	}
@@ -1258,8 +1258,8 @@ int YongHotKey(int key)
 #ifdef _WIN32
 		if(MainNoShow && tip_main)
 		{
-			if(id->state) y_ui_show_tip(YT("´ò¿ªÊäÈë·¨"));
-			else y_ui_show_tip(YT("¹Ø±ÕÊäÈë·¨"));
+			if(id->state) y_ui_show_tip(YT("æ‰“å¼€è¾“å…¥æ³•"));
+			else y_ui_show_tip(YT("å…³é—­è¾“å…¥æ³•"));
 		}
 #endif
 		return 1;
@@ -1271,7 +1271,7 @@ int YongHotKey(int key)
 			int prev=id->lang;
 			YongSetLang(!id->lang);
 			if(prev!=id->lang && tip_main)
-				y_ui_show_tip(YT("ÇÐ»»µ½£º%s"),(id->lang==LANG_CN?YT("ÖÐÎÄ"):YT("Ó¢ÎÄ")));
+				y_ui_show_tip(YT("åˆ‡æ¢åˆ°ï¼š%s"),(id->lang==LANG_CN?YT("ä¸­æ–‡"):YT("è‹±æ–‡")));
 			return 1;
 		}
 	}
@@ -1281,7 +1281,7 @@ int YongHotKey(int key)
 		{
 			YongSetCorner(!id->corner);
 			if(tip_main)
-				y_ui_show_tip(YT("ÇÐ»»µ½£º%s"),(id->corner==CORNER_FULL?YT("È«½Ç"):YT("°ë½Ç")));
+				y_ui_show_tip(YT("åˆ‡æ¢åˆ°ï¼š%s"),(id->corner==CORNER_FULL?YT("å…¨è§’"):YT("åŠè§’")));
 			return 1;
 		}
 	}
@@ -1291,7 +1291,7 @@ int YongHotKey(int key)
 		{
 			YongSetBiaodian(!id->biaodian);
 			if(tip_main)
-				y_ui_show_tip(YT("ÇÐ»»µ½£º%s"),(id->biaodian==LANG_CN?YT("ÖÐÎÄ±êµã"):YT("Ó¢ÎÄ±êµã")));
+				y_ui_show_tip(YT("åˆ‡æ¢åˆ°ï¼š%s"),(id->biaodian==LANG_CN?YT("ä¸­æ–‡æ ‡ç‚¹"):YT("è‹±æ–‡æ ‡ç‚¹")));
 			return 1;
 		}
 	}
@@ -1305,7 +1305,7 @@ int YongHotKey(int key)
 			if(name!=NULL)
 			{
 				if(tip_main)
-					y_ui_show_tip(YT("ÇÐ»»µ½£º%s"),name);
+					y_ui_show_tip(YT("åˆ‡æ¢åˆ°ï¼š%s"),name);
 				l_free(name);
 			}
 			return 1;
@@ -1317,9 +1317,9 @@ int YongHotKey(int key)
 		{
 			const char *temp;
 			YongSetTrad(!id->trad);
-			temp=(id->trad==0?YT("¼òÌå"):YT("·±Ìå"));
+			temp=(id->trad==0?YT("ç®€ä½“"):YT("ç¹ä½“"));
 			if(tip_main)
-				y_ui_show_tip(YT("ÇÐ»»µ½£º%s"),temp);
+				y_ui_show_tip(YT("åˆ‡æ¢åˆ°ï¼š%s"),temp);
 			return 1;
 		}
 	}
@@ -1725,7 +1725,7 @@ IMR_TEST:
 				}
 				else
 				{
-					// ÔÚ¿ÕÂëÊ±°´ÏÂÑ¡Ôñ¼ü£¬Ô­À´ÊÇ±£ÁôÔ­ÑùÏÔÊ¾£¬µ«»¹ÊÇÇå¿Õ±àÂëµÈ×´Ì¬±È½ÏºÃ
+					// åœ¨ç©ºç æ—¶æŒ‰ä¸‹é€‰æ‹©é”®ï¼ŒåŽŸæ¥æ˜¯ä¿ç•™åŽŸæ ·æ˜¾ç¤ºï¼Œä½†è¿˜æ˜¯æ¸…ç©ºç¼–ç ç­‰çŠ¶æ€æ¯”è¾ƒå¥½
 					if(eim->StringGet[0] || eim->CandWordCount)
 						ret=IMR_DISPLAY;
 					else
@@ -1809,7 +1809,7 @@ IMR_TEST:
 			{
 				const char *t,*t2;
 				t=s2t_conv(&eim->CandTable[eim->SelectIndex][0]);
-				t2=strstr(t,"£¬");
+				t2=strstr(t,"ï¼Œ");
 				if(t2)
 				{
 					int i;
@@ -1835,7 +1835,7 @@ IMR_TEST:
 			{
 				const char *t,*t2;
 				t=s2t_conv(&eim->CandTable[eim->SelectIndex][0]);
-				t2=strstr(t,"£¬");
+				t2=strstr(t,"ï¼Œ");
 				if(t2)
 				{
 					int i;

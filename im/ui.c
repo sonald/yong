@@ -1154,7 +1154,7 @@ int ui_input_update(UI_INPUT *param)
 		char temp[8];
 		int cy;
 		int get_text_width(const char *s,PangoLayout *layout,int *height);
-		y_im_str_encode("²â",temp,0);
+		y_im_str_encode("æµ‹",temp,0);
 		get_text_width(temp,InputTheme.layout,&cy);
 		if(InputTheme.line==0 || InputTheme.line==2)
 		{
@@ -1646,10 +1646,10 @@ int ui_input_show(int show)
 {
 	if(show)
 	{
-		// ÔÚÕâÒÆ¶¯´°¿ÚÊÇÎªÁËĞŞ¸´gtk_widget_hideÖ®ºó¿ÉÄÜ×Ô¶¯ĞŞ¸Ä´°¿ÚÎ»ÖÃµÄbug
+		// åœ¨è¿™ç§»åŠ¨çª—å£æ˜¯ä¸ºäº†ä¿®å¤gtk_widget_hideä¹‹åå¯èƒ½è‡ªåŠ¨ä¿®æ”¹çª—å£ä½ç½®çš„bug
 		gtk_window_move(GTK_WINDOW(InputWin),InputWin_X,InputWin_Y);
 #if GTK_CHECK_VERSION(3,0,0)
-		// gtk3ÖĞÓĞ¿ÉÄÜ³öÏÖ²»ÏÔÊ¾µÄÎÊÌâ£¬»³ÒÉÊÇÒş²ØÖ®ºóÖØĞÂÏÔÊ¾´°¿Ú´óĞ¡±»Éè³É0ÁË
+		// gtk3ä¸­æœ‰å¯èƒ½å‡ºç°ä¸æ˜¾ç¤ºçš„é—®é¢˜ï¼Œæ€€ç–‘æ˜¯éšè—ä¹‹åé‡æ–°æ˜¾ç¤ºçª—å£å¤§å°è¢«è®¾æˆ0äº†
 		//gtk_window_resize(GTK_WINDOW(InputWin),InputTheme.RealWidth,InputTheme.RealHeight);
 #endif
 		gtk_widget_show(InputWin);
@@ -1908,7 +1908,7 @@ void ui_show_message(const char *s)
 		GTK_BUTTONS_OK,
 		temp);
 	gtk_window_set_position(GTK_WINDOW(dlg),GTK_WIN_POS_CENTER);
-	y_im_str_encode(YT("YongÊäÈë·¨"),temp,0);
+	y_im_str_encode(YT("Yongè¾“å…¥æ³•"),temp,0);
 	gtk_window_set_title(GTK_WINDOW(dlg),temp);
 	gtk_dialog_run(GTK_DIALOG(dlg));
 	gtk_widget_destroy(dlg);
@@ -2048,106 +2048,6 @@ void ui_show_tip(const char *fmt,...)
 	tip_timer_id=g_timeout_add(1500,(GSourceFunc)on_tip_timeout,tip);
 }
 
-#if 0
-static void speed_stat(void)
-{
-	GtkWidget *dlg;
-	char temp[1500];
-	
-	y_im_str_encode(y_im_speed_stat(),temp,0);
-	
-	dlg=gtk_message_dialog_new(
-		GTK_WINDOW(MainWin),
-		GTK_DIALOG_DESTROY_WITH_PARENT,
-		GTK_MESSAGE_INFO,
-		GTK_BUTTONS_OK,
-		temp);
-	gtk_window_set_title(GTK_WINDOW(dlg),YT("YongÊäÈë·¨"));
-	gtk_dialog_run(GTK_DIALOG(dlg));
-	gtk_widget_destroy(dlg);
-}
-
-static void do_optimize(void)
-{
-	int ret;
-	void *out=NULL;
-	ret=y_im_run_tool("tool_save_user",0,0);
-	if(ret!=0) return;
-	ret=y_im_run_tool("tool_get_file","main",&out);
-	if(ret!=0 || !out) return;
-	y_im_backup_file(out,".bak");
-	y_im_run_tool("tool_optimize",0,0);
-	ui_show_message(YT("Íê³É"));
-}
-
-static void do_merge_user(void)
-{
-	int ret;
-	void *out=NULL;
-	ret=y_im_run_tool("tool_save_user",0,0);
-	if(ret!=0) return;
-	ret=y_im_run_tool("tool_get_file","main",&out);
-	if(ret!=0 || !out) return;
-	y_im_backup_file(out,".bak");
-	ret=y_im_run_tool("tool_get_file","user",&out);
-	if(ret!=0 || !out) return;
-	y_im_backup_file(out,".bak");
-	ret=y_im_run_tool("tool_merge_user",0,0);
-	if(ret!=0) return;
-	y_im_remove_file(out);
-	YongReloadAll();
-	ui_show_message(YT("Íê³É"));
-}
-
-static void do_edit_main(void)
-{
-	int ret;
-	void *out=NULL;
-	char *ed;
-	char temp[256];
-	ed=y_im_get_config_string("table","edit");
-	if(!ed) return;
-	ret=y_im_run_tool("tool_get_file","main",&out);
-	if(ret!=0 || !out)
-	{
-		g_free(ed);
-		return;
-	}
-	out=y_im_auto_path(out);
-	sprintf(temp,"%s %s",ed,(char*)out);
-	y_im_run_helper(temp,out,YongReloadAll);
-	g_free(ed);
-	g_free(out);
-}
-#endif
-
-#if 0
-static const char *get_gb18030_support()
-{
-	char temp[8];
-	temp[0]=0;
-	l_gb_to_utf8("\x98\x39\x9f\x38",temp,sizeof(temp));
-	if(temp[0])
-		return "GB18030";
-	l_gb_to_utf8("\x98\x35\xf7\x38",temp,sizeof(temp));
-	if(temp[0])
-		return "CJK-C";
-	l_gb_to_utf8("\x95\x32\x82\x36",temp,sizeof(temp));
-	if(temp[0])
-		return "CJK-B";
-	l_gb_to_utf8("\x81\x30\x81\x30",temp,sizeof(temp));
-	if(temp[0])
-		return "CJK-A";
-	l_gb_to_utf8("éF",temp,sizeof(temp));
-	if(temp[0])
-		return "GBK";
-	l_gb_to_utf8("µÄ",temp,sizeof(temp));
-	if(temp[0])
-		return "GB2312";
-	return "NOTHING";
-}
-#endif
-
 static void show_system_info(void)
 {
 	char temp[1024];
@@ -2167,122 +2067,6 @@ static void show_system_info(void)
 	//pos+=sprintf(temp+pos,"SUPPORT=%s\n",p);
 	ui_show_message(temp);
 }
-
-#if 0
-static GtkWidget *im_manage_menu(void)
-{
-	char *engine;
-	GtkWidget *pop,*item;
-	char keymap[128];
-	char name[128];
-	
-	pop=gtk_menu_new();
-	gtk_menu_item_set_submenu(GTK_MENU_ITEM(im_manage),pop);
-	
-	y_im_str_encode(YT("ÊäÈëÍ³¼Æ"),name,0);
-	item=gtk_menu_item_new_with_label(name);
-	g_signal_connect(G_OBJECT(item),"activate",
-		G_CALLBACK(speed_stat),NULL);
-	gtk_menu_shell_append(GTK_MENU_SHELL(pop),item);
-	gtk_widget_show(item);
-	
-	y_im_str_encode(YT("ÏµÍ³ĞÅÏ¢"),name,0);
-	item=gtk_menu_item_new_with_label(name);
-	g_signal_connect(G_OBJECT(item),"activate",
-		G_CALLBACK(show_system_info),NULL);
-	gtk_menu_shell_append(GTK_MENU_SHELL(pop),item);
-	gtk_widget_show(item);
-	
-	if(0==y_im_get_keymap(keymap,128))
-	{
-		item=gtk_menu_item_new_with_label(keymap);
-		g_signal_connect(G_OBJECT(item),"activate",
-			G_CALLBACK(y_im_show_keymap),NULL);
-		gtk_menu_shell_append(GTK_MENU_SHELL(pop),item);
-		gtk_widget_show(item);
-	}
-	
-	engine=y_im_get_current_engine();
-	if(engine && !strcmp(engine,"libmb.so"))
-	{
-		y_im_str_encode(YT("Âë±íÓÅ»¯"),name,0);
-		item=gtk_menu_item_new_with_label(name);
-		g_signal_connect(G_OBJECT(item),"activate",
-			G_CALLBACK(do_optimize),NULL);
-		gtk_menu_shell_append(GTK_MENU_SHELL(pop),item);
-		gtk_widget_show(item);
-		y_im_str_encode(YT("ºÏ²¢ÓÃ»§Âë±í"),name,0);
-		item=gtk_menu_item_new_with_label(name);
-		g_signal_connect(G_OBJECT(item),"activate",
-			G_CALLBACK(do_merge_user),NULL);
-		gtk_menu_shell_append(GTK_MENU_SHELL(pop),item);
-		gtk_widget_show(item);
-		if(y_im_has_config("table","edit"))
-		{
-			y_im_str_encode(YT("±à¼­Âë±í"),name,0);
-			item=gtk_menu_item_new_with_label(name);
-			g_signal_connect(G_OBJECT(item),"activate",
-				G_CALLBACK(do_edit_main),NULL);
-			gtk_menu_shell_append(GTK_MENU_SHELL(pop),item);
-			gtk_widget_show(item);
-		}
-	}
-	
-	return pop;
-}
-#endif
-
-#if 0
-static void im_show_help_main(void)
-{
-	y_im_show_help("main");
-}
-
-static void im_show_help_cur(void)
-{
-	char item[64];
-	if(!y_im_get_current(item,sizeof(item)))
-		y_im_show_help(item);
-}
-#endif
-
-#if 0
-static GtkWidget *im_help_menu(GtkWidget *parent)
-{
-	GtkWidget *pop,*item;
-	char desc[128];
-	char cur[64];
-	
-	pop=gtk_menu_new();
-	gtk_menu_item_set_submenu(GTK_MENU_ITEM(parent),pop);
-	
-	if(!y_im_help_desc("main",desc,128))
-	{
-		item=gtk_menu_item_new_with_label(desc);
-		g_signal_connect(G_OBJECT(item),"activate",
-			G_CALLBACK(im_show_help_main),0);
-		gtk_menu_shell_append(GTK_MENU_SHELL(pop),item);
-		gtk_widget_show(item);
-	}
-	if(!y_im_get_current(cur,64) && !y_im_help_desc(cur,desc,128))
-	{
-		item=gtk_menu_item_new_with_label(desc);
-		g_signal_connect(G_OBJECT(item),"activate",
-			G_CALLBACK(im_show_help_cur),0);
-		gtk_menu_shell_append(GTK_MENU_SHELL(pop),item);
-		gtk_widget_show(item);
-	}
-	
-	y_im_str_encode(YT("¹ØÓÚ"),desc,0);
-	item=gtk_menu_item_new_with_label(desc);
-	g_signal_connect(G_OBJECT(item),"activate",
-		G_CALLBACK(y_im_about_self),NULL);
-	gtk_menu_shell_append(GTK_MENU_SHELL(pop),item);
-	gtk_widget_show(item);
-	
-	return pop;
-}
-#endif
 
 static void menu_set_default(void)
 {
@@ -2324,7 +2108,7 @@ static GtkWidget *im_list_menu(void)
 	item=gtk_separator_menu_item_new();
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
 	gtk_widget_show(item);
-	y_im_str_encode(YT("Ä¬ÈÏ"),name,0);
+	y_im_str_encode(YT("é»˜è®¤"),name,0);
 	item=gtk_menu_item_new_with_label(name);
 	gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
 	gtk_widget_show(item);

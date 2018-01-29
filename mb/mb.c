@@ -1511,7 +1511,7 @@ struct y_mb_zi *mb_find_zi(struct y_mb*mb,const char *s)
 	return z;
 }
 
-/* Èç¹ûÉè¶¨ÁË×é´ÊÂë£¬ÄÇÃ´¾ÍÖ»ÓĞ×é´ÊÂë²ÅÊÇºÃµÄ±àÂë */
+/* å¦‚æœè®¾å®šäº†ç»„è¯ç ï¼Œé‚£ä¹ˆå°±åªæœ‰ç»„è¯ç æ‰æ˜¯å¥½çš„ç¼–ç  */
 int y_mb_is_good_code(struct y_mb *mb,const char *code,const char *s)
 {
 	struct y_mb_zi *z;
@@ -2058,9 +2058,9 @@ static inline struct y_mb_ci *mb_add_one_ci(
 					{
 						p->dic=dic;
 					}
-					// Èç¹û·µ»Øp£¬Í¬Ò»ĞĞÖĞÆäËû´Ê»á¸úÔÚ·µ»ØµÄpºóÃæ
-					// ËùÒÔ·µ»ØNULL£¬ÈÃºóÃæµÄ´Ê×Ô¶¯µ½×îºóÈ¥£¬ËÙ¶È»áÉÔÂı
-					// ÕâÊÇÎ»ÖÃ×¼È·ĞÔºÍËÙ¶ÈµÄÒ»¸öÆ½ºâ
+					// å¦‚æœè¿”å›pï¼ŒåŒä¸€è¡Œä¸­å…¶ä»–è¯ä¼šè·Ÿåœ¨è¿”å›çš„påé¢
+					// æ‰€ä»¥è¿”å›NULLï¼Œè®©åé¢çš„è¯è‡ªåŠ¨åˆ°æœ€åå»ï¼Œé€Ÿåº¦ä¼šç¨æ…¢
+					// è¿™æ˜¯ä½ç½®å‡†ç¡®æ€§å’Œé€Ÿåº¦çš„ä¸€ä¸ªå¹³è¡¡
 					return NULL;
 				}
 				if(p->next==NULL)
@@ -2130,7 +2130,7 @@ static inline struct y_mb_ci *mb_add_one_ci(
 					if(c) mb_ci_free(c);
 					if(i==pos)
 					{
-						/* ´ÊÒÑ¾­ÔÚÕı³£Î»ÖÃ£¬²»ĞèÒªÓÃ»§´Ê¿âµ÷Õû */
+						/* è¯å·²ç»åœ¨æ­£å¸¸ä½ç½®ï¼Œä¸éœ€è¦ç”¨æˆ·è¯åº“è°ƒæ•´ */
 						if(dic==Y_MB_DIC_PIN)
 							n->dic=Y_MB_DIC_PIN;
 						return n;
@@ -2625,7 +2625,7 @@ int y_mb_del_phrase(struct y_mb *mb,const char * code,const char *phrase)
 			mb_add_zi(mb,code,strlen(code),phrase,strlen(phrase),-1);
 	}
 	/*
-	// ÓÃ»§ÒÆ¶¯¹ıµÄÖ÷´Ê¿â´Ê¿ÉÄÜÉ¾²»µô£¬±ê¼ÇÎªdel¼´¿É
+	// ç”¨æˆ·ç§»åŠ¨è¿‡çš„ä¸»è¯åº“è¯å¯èƒ½åˆ ä¸æ‰ï¼Œæ ‡è®°ä¸ºdelå³å¯
 	if(c->dic==Y_MB_DIC_USER)
 	{
 		item->phrase=mb_slist_remove(item->phrase,c);
@@ -2708,10 +2708,10 @@ static void mb_mark_simple(struct y_mb *mb)
 	struct y_mb_index *index;
 	struct y_mb_zi *z;
 	
-	/* Ö»¿¼ÂÇ¼òÂë´¦ÀíºÍÈ«Âë²»ÖØ¸´ÏÔÊ¾µÄÇé¿ö */
+	/* åªè€ƒè™‘ç®€ç å¤„ç†å’Œå…¨ç ä¸é‡å¤æ˜¾ç¤ºçš„æƒ…å†µ */
 	if(!mb->simple && !mb->compat)
 		return;
-	/* Ö»¿¼ÂÇµ¥×ÖµÄÇé¿ö */
+	/* åªè€ƒè™‘å•å­—çš„æƒ…å†µ */
 	if(!mb->zi)
 		return;
 
@@ -2721,35 +2721,35 @@ static void mb_mark_simple(struct y_mb *mb)
 		for(it=index->item;it;it=it->next)
 		{
 			char *cur=0;
-			int len=0;		/* ²»ÓÃ³õÊ¼»¯£¬µ«ÊÇgccÓĞÒ»¸ö´íÎóµÄÎ´³õÊ¼»¯¾¯¸æ */
+			int len=0;		/* ä¸ç”¨åˆå§‹åŒ–ï¼Œä½†æ˜¯gccæœ‰ä¸€ä¸ªé”™è¯¯çš„æœªåˆå§‹åŒ–è­¦å‘Š */
 			struct y_mb_ci *c,*first=NULL;
 			for(c=it->phrase;c;c=c->next)
 			{
-				if(c->del)				/* ÒÑ±»É¾³ı */
+				if(c->del)				/* å·²è¢«åˆ é™¤ */
 					continue;
-				if(!first)				/* µÃµ½µÚÒ»¸ö´Ê×é */
+				if(!first)				/* å¾—åˆ°ç¬¬ä¸€ä¸ªè¯ç»„ */
 					first=c;
-				if(!c->zi)				/* Ìø¹ı²»ÊÇ×ÖµÄ */
+				if(!c->zi)				/* è·³è¿‡ä¸æ˜¯å­—çš„ */
 					continue;
 				if(!cur)
 				{
-					/* »ñµÃµ±Ç°ÏµÁĞ´Ê×éµÄ±àÂë */
+					/* è·å¾—å½“å‰ç³»åˆ—è¯ç»„çš„ç¼–ç  */
 					cur=mb_key_conv_r(mb,index->index,it->code);
 					len=strlen(cur);
-					if(len==1) break; /* ²»¿¼ÂÇÒ»¼ò */
+					if(len==1) break; /* ä¸è€ƒè™‘ä¸€ç®€ */
 				}
-				/* ²éÕÒ×Ö¶ÔÓ¦µÄĞÅÏ¢ */
+				/* æŸ¥æ‰¾å­—å¯¹åº”çš„ä¿¡æ¯ */
 				z=mb_find_zi(mb,(const char*)&c->data);
-				if(!z)		/* ÕÒ²»µ½Ïà¹ØĞÅÏ¢ */
+				if(!z)		/* æ‰¾ä¸åˆ°ç›¸å…³ä¿¡æ¯ */
 					continue;
 				if(mb->simple==2 &&	c==it->phrase && !c->next)
 				{
-					/* ÎŞÖØÂë£¬¶Ô¡°ÖØÂëÊ±Òş²Ø¼òÂë¡±¹¦ÄÜÀ´Ëµ²»ĞèÒª´¦Àí */
+					/* æ— é‡ç ï¼Œå¯¹â€œé‡ç æ—¶éšè—ç®€ç â€åŠŸèƒ½æ¥è¯´ä¸éœ€è¦å¤„ç† */
 					continue;
 				}
 				else if(mb->simple==1 || mb->simple==2)
 				{
-					/* ¶Ô¡°ÖØÂëÊ±Òş²Ø¼òÂë¡±ºÍ¡°³ö¼ò²»³öÈ«¡°¹¦ÄÜ£¬±ê¼Ç¼òÂë */
+					/* å¯¹â€œé‡ç æ—¶éšè—ç®€ç â€å’Œâ€œå‡ºç®€ä¸å‡ºå…¨â€œåŠŸèƒ½ï¼Œæ ‡è®°ç®€ç  */
 					if(mb_zi_has_simple(z,len))
 					{
 						c->simp=1;
@@ -2763,8 +2763,8 @@ static void mb_mark_simple(struct y_mb *mb)
 				{
 					if(c==first && c->next && mb_zi_has_simple(z,len))
 					{
-						/* Ö»ÓĞ¶à¸ö´Ê×é£¬ÇÒ×Ô¼ºÊÇµÚÒ»¸ö´Ê×éµÄÊ±ºò²Å¿¼ÂÇ¼òÂëºóÖÃ */
-						/* ÓÉÓÚÁ´±íÖØĞÂÅÅĞò£¬µ¼³öµÄÂë±í²»»áÔÙ±£³ÖÔ­Ñù */
+						/* åªæœ‰å¤šä¸ªè¯ç»„ï¼Œä¸”è‡ªå·±æ˜¯ç¬¬ä¸€ä¸ªè¯ç»„çš„æ—¶å€™æ‰è€ƒè™‘ç®€ç åç½® */
+						/* ç”±äºé“¾è¡¨é‡æ–°æ’åºï¼Œå¯¼å‡ºçš„ç è¡¨ä¸ä¼šå†ä¿æŒåŸæ · */
 						struct y_mb_ci *h;
 						for(h=c->next;h;c=h,h=h->next)
 						{
@@ -2793,20 +2793,20 @@ static void mb_mark_simple(struct y_mb *mb)
 			for(c=it->phrase;c;c=c->next)
 			{
 				struct y_mb_code *p;
-				if(c->del)				/* ÒÑ±»É¾³ı */
+				if(c->del)				/* å·²è¢«åˆ é™¤ */
 					continue;
-				if(!c->zi)				/* Ìø¹ı²»ÊÇ×ÖµÄ */
+				if(!c->zi)				/* è·³è¿‡ä¸æ˜¯å­—çš„ */
 					continue;
 				if(!cur)
 				{
-					/* »ñµÃµ±Ç°ÏµÁĞ´Ê×éµÄ±àÂë */
+					/* è·å¾—å½“å‰ç³»åˆ—è¯ç»„çš„ç¼–ç  */
 					cur=mb_key_conv_r(mb,index->index,it->code);
 					len=strlen(cur);
-					if(len==1) break; /* ²»¿¼ÂÇÒ»¼ò */
+					if(len==1) break; /* ä¸è€ƒè™‘ä¸€ç®€ */
 				}
-				/* ²éÕÒ×Ö¶ÔÓ¦µÄĞÅÏ¢ */
+				/* æŸ¥æ‰¾å­—å¯¹åº”çš„ä¿¡æ¯ */
 				z=mb_find_zi(mb,(const char*)&c->data);
-				if(!z)		/* ÕÒ²»µ½Ïà¹ØĞÅÏ¢ */
+				if(!z)		/* æ‰¾ä¸åˆ°ç›¸å…³ä¿¡æ¯ */
 					continue;
 				for(p=z->code;p;p=p->next)
 				{
@@ -2815,13 +2815,13 @@ static void mb_mark_simple(struct y_mb *mb)
 					if(p->len>=len) continue;
 					for(i=0;i<p->len;i++)
 					{
-						/* ÔÚ·¢ÏÖ±àÂë²»Æ¥ÅäÊ±Ìø³öÑ­»· */
+						/* åœ¨å‘ç°ç¼–ç ä¸åŒ¹é…æ—¶è·³å‡ºå¾ªç¯ */
 						if(cur[i]!=y_mb_code_n_key(mb,p,i))
 							break;
 					}
 					if(i==p->len)
 					{
-						/* ÓĞ¸ü³¤µÄ±àÂë£¬±íÃ÷ÕâÊÇÒ»¸ö¼òÂë */
+						/* æœ‰æ›´é•¿çš„ç¼–ç ï¼Œè¡¨æ˜è¿™æ˜¯ä¸€ä¸ªç®€ç  */
 						c->simp=1;
 						break;
 					}
@@ -3642,7 +3642,7 @@ int y_mb_load_fuzzy(struct y_mb *mb,const char *fuzzy)
 	FUZZY_TABLE *ft;
 	if(mb->encode!=0 || mb->nsort)
 		return -1;
-	// ¼ÓÔØÄ£ºı±àÂë±í
+	// åŠ è½½æ¨¡ç³Šç¼–ç è¡¨
 	ft=fuzzy_table_load(fuzzy);
 	if(!ft)
 		return -1;
@@ -3904,7 +3904,7 @@ int y_mb_has_next(struct y_mb *mb,int dext)
 	{
 		/**
 		 * TODO:
-		 * ÏÖÔÚÖ»ÔÚºòÑ¡Ïî¸öÊıÎª1Ê±£¬ÅĞ¶ÏÊÇ·ñÓĞºóĞø±àÂë
+		 * ç°åœ¨åªåœ¨å€™é€‰é¡¹ä¸ªæ•°ä¸º1æ—¶ï¼Œåˆ¤æ–­æ˜¯å¦æœ‰åç»­ç¼–ç 
 		 */
 		if(mb->ctx.result_count==1)
 		{
@@ -3921,8 +3921,8 @@ int y_mb_has_next(struct y_mb *mb,int dext)
 	{
 		/**
 		 * TODO:
-		 * ÔÚÂë³¤ÎªÒ»Ê±£¬Ã»ÓĞ¿¼ÂÇµ½³ö¼ò²»³öÈ«£¬µ¥×ÖÄ£Ê½£¬ÓĞ±»É¾³ı×Ö´Ê´æÔÚµÈÇé¿ö 
-		 * ¿¼ÂÇµ½Êµ¼ÊÊ¹ÓÃÖĞ²»Ì«¿ÉÄÜÔÚÒ»¼ò´¦³öÎÊÌâ£¬Ôİ²»´¦Àí
+		 * åœ¨ç é•¿ä¸ºä¸€æ—¶ï¼Œæ²¡æœ‰è€ƒè™‘åˆ°å‡ºç®€ä¸å‡ºå…¨ï¼Œå•å­—æ¨¡å¼ï¼Œæœ‰è¢«åˆ é™¤å­—è¯å­˜åœ¨ç­‰æƒ…å†µ 
+		 * è€ƒè™‘åˆ°å®é™…ä½¿ç”¨ä¸­ä¸å¤ªå¯èƒ½åœ¨ä¸€ç®€å¤„å‡ºé—®é¢˜ï¼Œæš‚ä¸å¤„ç†
 		 */
 		struct y_mb_index *index;
 		index=mb->ctx.result_index;
@@ -3946,7 +3946,7 @@ int y_mb_has_next(struct y_mb *mb,int dext)
 			struct y_mb_ci *c=p->phrase;
 			while(c)
 			{
-				/* µ¥×Ö³ö¼ò²»³öÈ«Ê±£¬ºöÂÔÕâĞ©ÓĞ¼òÂëµÄ×Ö */
+				/* å•å­—å‡ºç®€ä¸å‡ºå…¨æ—¶ï¼Œå¿½ç•¥è¿™äº›æœ‰ç®€ç çš„å­— */
 				if(c->zi && mb->simple && c->simp)
 				{
 					c=c->next;
@@ -4182,7 +4182,7 @@ int y_mb_max_match(struct y_mb *mb,char *s,int len,int dlen,
 				for(c=item->phrase;c;c=c->next)
 				{
 					if(c->del) continue;
-					/* FIXME: ÕâÀïÏÖÔÚÖ»ÊÇ¼òµ¥µÄ°Ñºº×Ö´¦Àí³ÉÁ½¸ö±àÂë£¬ĞèÒªÑÏ¸ñ°´ÕÕºº×Ô¶¨ÒåÀ´½øĞĞ */
+					/* FIXME: è¿™é‡Œç°åœ¨åªæ˜¯ç®€å•çš„æŠŠæ±‰å­—å¤„ç†æˆä¸¤ä¸ªç¼–ç ï¼Œéœ€è¦ä¸¥æ ¼æŒ‰ç…§æ±‰è‡ªå®šä¹‰æ¥è¿›è¡Œ */
 					if(dlen>0 && c->len!=dlen*2) continue;
 					if(filter && c->zi && c->ext) continue;
 					if(key[i]==0 && i+base>exact)
@@ -4494,7 +4494,7 @@ static LArray *add_fuzzy_phrase(LArray *head,struct y_mb *mb,struct y_mb_context
 				}
 				if(extern_match && !extern_match(mb,c,len,sep)) continue;
 				
-				/* ÏŞÖÆÃ¿¸öÄ£ºıÒôµÄºòÑ¡£¬±ÜÃâÌ«¶àºòÑ¡µ¼ÖÂÊäÈë·¨³¤Ê±¼äÊ§È¥ÏìÓ¦ */
+				/* é™åˆ¶æ¯ä¸ªæ¨¡ç³ŠéŸ³çš„å€™é€‰ï¼Œé¿å…å¤ªå¤šå€™é€‰å¯¼è‡´è¾“å…¥æ³•é•¿æ—¶é—´å¤±å»å“åº” */
 				count++;
 				if(count>1536) break;
 
@@ -4885,7 +4885,7 @@ int y_mb_set(struct y_mb *mb,const char *s,int len,int filter)
 	}
 	else
 	{
-		// ½ö½öÔÚcount>0µÄÊ±ºòĞŞ¸Äctx£¬Ê¹¿ÕÂë±£ÁôÉÏÒ»¸ö×´Ì¬×´Ì¬
+		// ä»…ä»…åœ¨count>0çš„æ—¶å€™ä¿®æ”¹ctxï¼Œä½¿ç©ºç ä¿ç•™ä¸Šä¸€ä¸ªçŠ¶æ€çŠ¶æ€
 		//ctx->result_count=0;
 		//ctx->result_count_zi=0;
 	}
@@ -5127,15 +5127,15 @@ int y_mb_get(struct y_mb *mb,int at,int num,
 				if(ret<0) break;
 				for(c=p->phrase;c;c=c->next)
 				{
-					/* ±ê¼ÇÎªÉ¾³ıµÄ */
+					/* æ ‡è®°ä¸ºåˆ é™¤çš„ */
 					if(c->del) continue;
-					/* À©Õ¹×Ö·û¼¯µÄ×Ö±»¹ıÂË */
+					/* æ‰©å±•å­—ç¬¦é›†çš„å­—è¢«è¿‡æ»¤ */
 					if(filter && c->zi && c->ext) continue;
-					/* Ö»Òªµ¥×Öµ«È´²»ÊÇµ¥×Ö */
+					/* åªè¦å•å­—ä½†å´ä¸æ˜¯å•å­— */
 					if(filter_zi && !c->zi && !(ctx->result_filter_ci_ext && c->ext)) continue;
-					/* ³ö¼ò²»³öÈ«Åöµ½ÁËÓĞ¼òÂëµÄµ¥×Ö */
+					/* å‡ºç®€ä¸å‡ºå…¨ç¢°åˆ°äº†æœ‰ç®€ç çš„å•å­— */
 					if(c->zi && mb->simple && c->simp) continue;
-					/* Ö»Òª·Ç³£ÓÃºº×Ö£¬¶øµ±Ç°·Ç×Ö»òÕßÊÇ³£ÓÃºº×Ö */
+					/* åªè¦éå¸¸ç”¨æ±‰å­—ï¼Œè€Œå½“å‰éå­—æˆ–è€…æ˜¯å¸¸ç”¨æ±‰å­— */
 					if(filter_ext && c->zi && !c->ext) continue;
 					if(ctx->result_compat==0)
 					{
@@ -5143,11 +5143,11 @@ int y_mb_get(struct y_mb *mb,int at,int num,
 						if(!c->zi && mb->compat && clen>len+mb->compat-1) continue;
 					}
 					if(extern_match && !extern_match(mb,c,len,sep)) continue;
-					/* Ìø¹ı²»ĞèÒªÈ¡µÄ²¿·Ö */
+					/* è·³è¿‡ä¸éœ€è¦å–çš„éƒ¨åˆ† */
 					if(skip<at)
 					{
 						skip++;
-						/* ÔÚÒ»¼òµÄÊ±ºò£¬Ã¿Ò»¸ö·ÇÍêÈ«Æ¥ÅäµÄ±àÂëÖ»ĞèÒªÒ»¸ö */
+						/* åœ¨ä¸€ç®€çš„æ—¶å€™ï¼Œæ¯ä¸€ä¸ªéå®Œå…¨åŒ¹é…çš„ç¼–ç åªéœ€è¦ä¸€ä¸ª */
 						if(mb->compat && len==1 && clen!=1) break;
 						continue;
 					}
@@ -5181,7 +5181,7 @@ int y_mb_get(struct y_mb *mb,int at,int num,
 	return 0;
 }
 
-/* ÏÖÔÚÖ»¿¼ÂÇÆ´ÒôÊäÈë·¨µÄµ¥×ÖÇé¿ö */
+/* ç°åœ¨åªè€ƒè™‘æ‹¼éŸ³è¾“å…¥æ³•çš„å•å­—æƒ…å†µ */
 int y_mb_in_result(struct y_mb *mb,struct y_mb_ci *c)
 {
 	struct y_mb_context *ctx=&mb->ctx;
@@ -5401,7 +5401,7 @@ int y_mb_get_legend(struct y_mb *mb,const char *src,int slen,
 					{
 						struct _l_item item;
 						item.c=c;
-						item.f=-c->len*10-n; /* ´Ê³¤¶ÌµÄÓÅÏÈ£¬´ÊĞòÔÚÇ°µÄÓÅÏÈ */
+						item.f=-c->len*10-n; /* è¯é•¿çŸ­çš„ä¼˜å…ˆï¼Œè¯åºåœ¨å‰çš„ä¼˜å…ˆ */
 						l_array_insert_sorted(array,&item,(LCmpFunc)_l_item_cmpar);
 						if(array->len>max)
 							array->len=max;
@@ -6369,7 +6369,7 @@ int y_mb_diff(struct y_mb *mb,FILE *fp,char *fn,int strict)
 	return 0;
 }
 
-/* »ñµÃ°´¼ü×îÉÙµÄ±àÂëĞòÁĞ */
+/* è·å¾—æŒ‰é”®æœ€å°‘çš„ç¼–ç åºåˆ— */
 static int mb_code_least(struct y_mb *mb,struct y_mb_zi *z,char *code)
 {
 	struct y_mb_code *c;

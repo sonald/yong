@@ -115,7 +115,7 @@ int y_expr_calc(const char *s,char *res,int len)
 			goto out;
 		}		
 	}while(tt!=G_TOKEN_EOF);
-	/* 在输入法应用中，只有一个token的话，没必要显示给用户看，所以直接跳出了 */
+	/* 鍦ㄨ緭鍏ユ硶搴旂敤涓紝鍙湁涓�涓猼oken鐨勮瘽锛屾病蹇呰鏄剧ず缁欑敤鎴风湅锛屾墍浠ョ洿鎺ヨ烦鍑轰簡 */
 	if(back->length<2)
 		goto out;
 	while((it=g_queue_pop_head(back))!=NULL)

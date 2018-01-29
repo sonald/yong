@@ -217,7 +217,7 @@ static int BookGet(char cand[][MAX_CAND_LEN+1],int pos,int count)
 		char *p=cand[pos];
 		char *s=(char*)e->Priv2;
 		int ret=sprintf(p,"$[");
-		ret+=sprintf(p+ret,"%s",YT("ÉèÖÃÃÜÔ¿"));
+		ret+=sprintf(p+ret,"%s",YT("è®¾ç½®å¯†é’¥"));
 		ret+=sprintf(p+ret,"]$KEY(");
 		l_base64_encode(p+ret,(const uint8_t*)s,strlen(s));
 		strcat(p,")");
@@ -229,7 +229,7 @@ static int BookGet(char cand[][MAX_CAND_LEN+1],int pos,int count)
 		if(s[0]==0)
 		{
 			int ret=sprintf(p,"$[");
-			ret+=sprintf(p+ret,"%s",YT("¼ÓÃÜ¼ôÌù°åÄÚÈİ"));
+			ret+=sprintf(p+ret,"%s",YT("åŠ å¯†å‰ªè´´æ¿å†…å®¹"));
 			ret+=sprintf(p+ret,"]$ENCRYPT()");
 		}
 		else
@@ -249,7 +249,7 @@ static int BookGet(char cand[][MAX_CAND_LEN+1],int pos,int count)
 			char *p=cand[i];
 			if(strlen(t)>MAX_CAND_LEN)
 			{
-				sprintf(p,"$[%s]",YT("Ì«³¤ÁË£¬²»Ö§³Ö"));
+				sprintf(p,"$[%s]",YT("å¤ªé•¿äº†ï¼Œä¸æ”¯æŒ"));
 			}
 			else
 			{
@@ -271,7 +271,7 @@ static int BookGet(char cand[][MAX_CAND_LEN+1],int pos,int count)
 		t=l_key_file_get_string(book,grp,s+i+1);
 		if(strlen(t)>MAX_CAND_LEN)
 		{
-			sprintf(p,"$[%s]",YT("Ì«³¤ÁË£¬²»Ö§³Ö"));
+			sprintf(p,"$[%s]",YT("å¤ªé•¿äº†ï¼Œä¸æ”¯æŒ"));
 		}
 		else
 		{

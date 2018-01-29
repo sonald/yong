@@ -1561,6 +1561,7 @@ void y_im_disp_cand(const char *gb,char *out,int pre,int suf)
 
 int y_im_str_encode(const char *gb,void *out,int flags)
 {
+
 	int key=-1;
 	char *s;
 	if(!gb[0])

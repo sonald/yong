@@ -560,7 +560,7 @@ static DWORD WINAPI sg_thread(void *param)
 				r=sg_parse(c,res);
 				free(res);
 				sg_lock(1);
-				/* 这里我们同时检查两次，返回的可能不是我们请求的 */
+				/* 杩欓噷鎴戜滑鍚屾椂妫�鏌ヤ袱娆★紝杩斿洖鐨勫彲鑳戒笉鏄垜浠姹傜殑 */
 				if(r && !strcmp(c->req,req) && !strcmp(r->q,req))
 				{
 					c->req[0]=0;

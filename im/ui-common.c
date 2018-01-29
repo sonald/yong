@@ -637,7 +637,7 @@ static void ui_draw_text(UI_DC dc,UI_FONT font,int x,int y,const void *text,UI_C
 		DWORD t=*(DWORD*)p;
 		if(L_UNLIKELY(t!=0x00ffffff))
 		{
-			// 应该用灰度作为alpha，为了速度选择用最有代表性的g分量
+			// 搴旇鐢ㄧ伆搴︿綔涓篴lpha锛屼负浜嗛�熷害閫夋嫨鐢ㄦ渶鏈変唬琛ㄦ�х殑g鍒嗛噺
 			BYTE alpha=0xff^((t>>8)&0xff);
 			p[0]=color.b*alpha/255;
 			p[1]=color.g*alpha/255;

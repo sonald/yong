@@ -31,29 +31,29 @@
 #define PSEARCH_ANY_POS		0x07
 
 typedef struct{
-	uint32_t magic;				/* ÎÄ¼şÍ·±êÊ¶ */
-	uint32_t zi_offset;			/* µ¥×Ö±íÆ«ÒÆÁ¿ */
-	uint32_t zi_count;			/* ×ÖµÄÊıÁ¿ */
-	uint32_t ci_freq;			/* ËùÓĞ´Ê¶ÔÊıÆµÂÊ */
-	uint32_t ci_offset;			/* ´ÊµÄÆ«ÒÆÁ¿ */
-	uint32_t ci_count;			/* ´ÊµÄÊıÁ¿ */
-	uint32_t it_offset;			/* ÓïÁÏµÄÆ«ÒÆÁ¿ */
-	uint32_t it_count;			/* ÓïÁÏµÄÊıÁ¿ */
-	uint32_t it_phrase;			/* ÕæÕıµÄÓïÁÏµÄÊıÁ¿ */
-	uint32_t raw_offset;		/* Êı¾İÆ«ÒÆ */
-	uint32_t raw_size;			/* Êı¾İ´óĞ¡ */
+	uint32_t magic;				/* æ–‡ä»¶å¤´æ ‡è¯† */
+	uint32_t zi_offset;			/* å•å­—è¡¨åç§»é‡ */
+	uint32_t zi_count;			/* å­—çš„æ•°é‡ */
+	uint32_t ci_freq;			/* æ‰€æœ‰è¯å¯¹æ•°é¢‘ç‡ */
+	uint32_t ci_offset;			/* è¯çš„åç§»é‡ */
+	uint32_t ci_count;			/* è¯çš„æ•°é‡ */
+	uint32_t it_offset;			/* è¯­æ–™çš„åç§»é‡ */
+	uint32_t it_count;			/* è¯­æ–™çš„æ•°é‡ */
+	uint32_t it_phrase;			/* çœŸæ­£çš„è¯­æ–™çš„æ•°é‡ */
+	uint32_t raw_offset;		/* æ•°æ®åç§» */
+	uint32_t raw_size;			/* æ•°æ®å¤§å° */
 }LEARN_HEADER;
 
 typedef struct{
-	uint32_t code;				/* ±àÂë */
-	uint32_t cand;				/* ´Ê */
+	uint32_t code;				/* ç¼–ç  */
+	uint32_t cand;				/* è¯ */
 	union{
 		uint8_t lf[4];
 		struct{
-			uint8_t zero;		/* ±£ÁôÎª0 */
-			uint8_t nseg;		/* ±àÂëÊÇ¼¸Ôª×é */
-			uint8_t phrase;		/* ÓïÁÏµÄµÚÒ»¶ÎºÍ×îºóÒ»¶ÎµÄ³¤¶È£¬ÒÔ×ÖÎªµ¥Î»£¬¸÷Õ¼3Î» */
-			uint8_t freq;		/* ÉèÖÃµÄÆµÂÊ */
+			uint8_t zero;		/* ä¿ç•™ä¸º0 */
+			uint8_t nseg;		/* ç¼–ç æ˜¯å‡ å…ƒç»„ */
+			uint8_t phrase;		/* è¯­æ–™çš„ç¬¬ä¸€æ®µå’Œæœ€åä¸€æ®µçš„é•¿åº¦ï¼Œä»¥å­—ä¸ºå•ä½ï¼Œå„å 3ä½ */
+			uint8_t freq;		/* è®¾ç½®çš„é¢‘ç‡ */
 		};
 	};
 }LEARN_ITEM;
@@ -86,21 +86,21 @@ static int ci_freq_cmp_s(const CI_FREQ_ITEM_S *v1,const CI_FREQ_ITEM_S *v2)
 }
 
 typedef struct{
-	struct y_mb *mb;				// ¶ÔÓ¦µÄÂë±í
-	uint32_t all_freq;				// ´ÊÆµÖ®ºÍ£¬unigram¼ÆËãÊ±ÓÃ
-	uint32_t hz_freq[GB_HZ_SIZE];	// ×ÖÆµ±í
-	int ci_count;					// ´ÊÆµÊıÁ¿
-	CI_FREQ_ITEM_S *ci_flat;		// Ê¹ÓÃÏßĞÔÊı×éµÄ´ÊÆµ±í
-	LHashTable *ci_index;			// ËùÓĞ´ÊµÄ¹şÏ£Ë÷Òı£¬Ö»ÔÚ´´½¨ÓïÁÏ¿âÊ±ÓÃ
-	int it_count;					// ×ÜµÄÓÚÓ¦ÁÏÊıÁ¿
-	int it_phrase;					// ÈıÔª×éÓïÁÏÊıÁ¿
-	LEARN_ITEM *it_data;			// ÓïÁÏÖ¸Õë
-	int raw_size;					// ×Ö´ÊµÈÊı¾İ´ó´óĞ¡
-	uint8_t *raw_data;				// ×Ö´ÊÊı¾İ
+	struct y_mb *mb;				// å¯¹åº”çš„ç è¡¨
+	uint32_t all_freq;				// è¯é¢‘ä¹‹å’Œï¼Œunigramè®¡ç®—æ—¶ç”¨
+	uint32_t hz_freq[GB_HZ_SIZE];	// å­—é¢‘è¡¨
+	int ci_count;					// è¯é¢‘æ•°é‡
+	CI_FREQ_ITEM_S *ci_flat;		// ä½¿ç”¨çº¿æ€§æ•°ç»„çš„è¯é¢‘è¡¨
+	LHashTable *ci_index;			// æ‰€æœ‰è¯çš„å“ˆå¸Œç´¢å¼•ï¼Œåªåœ¨åˆ›å»ºè¯­æ–™åº“æ—¶ç”¨
+	int it_count;					// æ€»çš„äºåº”æ–™æ•°é‡
+	int it_phrase;					// ä¸‰å…ƒç»„è¯­æ–™æ•°é‡
+	LEARN_ITEM *it_data;			// è¯­æ–™æŒ‡é’ˆ
+	int raw_size;					// å­—è¯ç­‰æ•°æ®å¤§å¤§å°
+	uint8_t *raw_data;				// å­—è¯æ•°æ®
 	LEARN_ITEM key;
 	void *user;
 #ifdef TOOLS_LEARN
-	LHashTable *ci_freq;			// ´ÊÆµ±í
+	LHashTable *ci_freq;			// è¯é¢‘è¡¨
 	CODE_CACHE *code_cache;
 #endif
 }LEARN_DATA;
@@ -207,12 +207,12 @@ typedef struct{
 	py_item_t input[PY_MAX_TOKEN];
 	int count;
 	char *cand;
-	int setence_begin;		// inputÊÇ·ñÒ»¸ö¾ä×ÓµÄ¿ªÊ¼
-	int setence_end;		// inputÊÇ·ñÒ»¸ö¾ä×ÓµÄ½áÊø
-	char assist_begin;		// ¾äÊ×¸¨ÖúÂë£¬ÏÖÔÚÃ»ÓĞÓÃµ½
-	char assist_end;		// ¾äÎ²¸¨ÖúÂë
-	int mark_skip;			// ±ê¼ÇÊÇ·ñÌø¹ıµÚÒ»¸öÆ¥ÅäµÄ
-	char last_zi[8];		// ÔÚÃ»ÓĞ¾äÎ²¸¨ÖúÂëµÄÇé¿öÏÂµÄ×îºóÒ»¸ö×Ö
+	int setence_begin;		// inputæ˜¯å¦ä¸€ä¸ªå¥å­çš„å¼€å§‹
+	int setence_end;		// inputæ˜¯å¦ä¸€ä¸ªå¥å­çš„ç»“æŸ
+	char assist_begin;		// å¥é¦–è¾…åŠ©ç ï¼Œç°åœ¨æ²¡æœ‰ç”¨åˆ°
+	char assist_end;		// å¥å°¾è¾…åŠ©ç 
+	int mark_skip;			// æ ‡è®°æ˜¯å¦è·³è¿‡ç¬¬ä¸€ä¸ªåŒ¹é…çš„
+	char last_zi[8];		// åœ¨æ²¡æœ‰å¥å°¾è¾…åŠ©ç çš„æƒ…å†µä¸‹çš„æœ€åä¸€ä¸ªå­—
 	struct y_mb_ci *codec[1024];
 }MMSEG;
 
@@ -253,7 +253,7 @@ static int mmseg_exist(MMSEG *mm,py_item_t *input,int count)
 		int start=input-mm->input;
 		if(start<mm->space2 && start+count>mm->space2)
 		{
-			// ¿Õ¸ñ·Ö¿ªµÄ±àÂë²»ÄÜºÏÆğÀ´ÓÃ
+			// ç©ºæ ¼åˆ†å¼€çš„ç¼–ç ä¸èƒ½åˆèµ·æ¥ç”¨
 			mm->codec[pos]=NULL;
 			return 0;
 		}
@@ -273,7 +273,7 @@ static int mmseg_exist(MMSEG *mm,py_item_t *input,int count)
 		len=py_prepare_string(code,code,0);
 		n=trie_tree_get_leaf(t,code,len);
 		
-		// ÕÒ²»µ½Æ´ÒôÊ±£¬¼òµ¥µÄÑ¡Ôñµ¥×Ó¼òÆ´
+		// æ‰¾ä¸åˆ°æ‹¼éŸ³æ—¶ï¼Œç®€å•çš„é€‰æ‹©å•å­ç®€æ‹¼
 		if((!n || !n->data) && len==2 && code[1]=='\'')
 		{
 			code[1]=0;
@@ -364,7 +364,7 @@ static int mmseg_exist(MMSEG *mm,py_item_t *input,int count)
 }
 
 /*
- ¾äÎ²¸¨ÖúÂë²âÊÔ
+ å¥å°¾è¾…åŠ©ç æµ‹è¯•
  womfuiuif
  nimfjdd
  dajwxdp
@@ -384,7 +384,7 @@ static int mmseg_logcf(MMSEG *mm,int pos,int len,struct y_mb_ci **ci)
 	if(!list) goto out;
 	/*first=*/list=(struct y_mb_ci*)(((uintptr_t)list)&~0x03);
 	
-	// codeÖ»ÔÚµ¥×ÖµÄÊ±ºòÊ¹ÓÃ
+	// codeåªåœ¨å•å­—çš„æ—¶å€™ä½¿ç”¨
 	code[0]=0;
 
 	if(!l_predict_data)
@@ -392,7 +392,7 @@ static int mmseg_logcf(MMSEG *mm,int pos,int len,struct y_mb_ci **ci)
 		tmp=list;
 		/*if(tmp && tmp->zi && mm->mb->simple)
 		{
-			// µ¥×ÖÓĞ¼òÂëÊ±£¬¿ÉÒÔÈÏÎª¼òÂëµÄ×ÖÆµ±È½Ï¸ß
+			// å•å­—æœ‰ç®€ç æ—¶ï¼Œå¯ä»¥è®¤ä¸ºç®€ç çš„å­—é¢‘æ¯”è¾ƒé«˜
 			for(list=list->next;list!=NULL;list=list->next)
 			{
 				if(!tmp->simp && list->simp)
@@ -487,7 +487,7 @@ static int mmseg_logcf(MMSEG *mm,int pos,int len,struct y_mb_ci **ci)
 			}
 		}
 
-		/* Ã»ÓĞ¸¨ÖúÂëÊ±°´´ÊÆµ£¬ÓĞµÄÊ±ºò°´Ë³Ğò */
+		/* æ²¡æœ‰è¾…åŠ©ç æ—¶æŒ‰è¯é¢‘ï¼Œæœ‰çš„æ—¶å€™æŒ‰é¡ºåº */
 		if(mm->assist_end && end)
 		{
 			if(!tmp)
@@ -512,12 +512,12 @@ static int mmseg_logcf(MMSEG *mm,int pos,int len,struct y_mb_ci **ci)
 			}
 		}
 	}
-	// ·¢Éú¾äÎ²¸¨ÖúÊ±£¬ÓÅÏÈÓÃµÚ¶ş¸öÆ¥ÅäµÄ´Ê
+	// å‘ç”Ÿå¥å°¾è¾…åŠ©æ—¶ï¼Œä¼˜å…ˆç”¨ç¬¬äºŒä¸ªåŒ¹é…çš„è¯
 out:
 	if(mm->assist_end && end && tmp2 && len>=1)
 	{
 		const char *s=y_mb_ci_string(tmp);
-		// Ö»ÓĞÔÚÊ×Ñ¡µÄtmpµÄÄ©×ÖÏàÍ¬²Å»»³ÉµÚ¶şºòÑ¡
+		// åªæœ‰åœ¨é¦–é€‰çš„tmpçš„æœ«å­—ç›¸åŒæ‰æ¢æˆç¬¬äºŒå€™é€‰
 		//printf("%s %s\n",s,mm->last_zi);
 		int last_len=(int)strlen(mm->last_zi);
 		int cmp_len=(tmp->len>=last_len)?last_len:tmp->len;
@@ -705,11 +705,11 @@ static int predict_copy(LEARN_DATA *data,char *dst,LEARN_ITEM *src,int count)
 }
 
 #if 1
-// ±£´æ¾Ö²¿×îÓÅ½â
+// ä¿å­˜å±€éƒ¨æœ€ä¼˜è§£
 static uint32_t unigram_split[64][64];
 static struct y_mb_ci *unigram_codec[1024];
 
-// »ñµÃ×Ö´ÊÆµ
+// è·å¾—å­—è¯é¢‘
 static int unigram_logcf(MMSEG *mm,int pos,int len,struct y_mb_ci **ci)
 {
 	int ret;
@@ -727,12 +727,12 @@ static int unigram_logcf(MMSEG *mm,int pos,int len,struct y_mb_ci **ci)
 	}
 	else
 	{
-		// TODO: Ã»ÓĞÓïÁÏ¿âµÄÊ±ºòÔõÃ´°ì
+		// TODO: æ²¡æœ‰è¯­æ–™åº“çš„æ—¶å€™æ€ä¹ˆåŠ
 	}
 	return ret;
 }
 
-// Î¬ÌØ±ÈËã·¨
+// ç»´ç‰¹æ¯”ç®—æ³•
 static uint32_t unigram_best(MMSEG *mm,int b,int l)
 {
 	uint32_t res;
@@ -776,7 +776,7 @@ out:
 	return res;
 }
 
-// Éú³ÉÒ»¸öÇĞ·ÖĞòÁĞ
+// ç”Ÿæˆä¸€ä¸ªåˆ‡åˆ†åºåˆ—
 static int unigram_build(int b,int l,uint8_t *out,int p)
 {
 	uint32_t res;
@@ -797,7 +797,7 @@ static int unigram_build(int b,int l,uint8_t *out,int p)
 	return p;
 }
 
-// Êä³öºº×Ö
+// è¾“å‡ºæ±‰å­—
 static void unigram_output(MMSEG *mm,uint8_t *seq,int len,char *out)
 {
 	int i;
@@ -839,7 +839,7 @@ static void unigram_output(MMSEG *mm,uint8_t *seq,int len,char *out)
 				}
 				else if((item->lf[2]&0x07)==seq[i+j-1]+1 && seq[i+j-2]>1)
 				{
-					// Ö»´¦Àí±ÈÄ¬ÈÏ·Ö¸î¶àÒ»¸ö×Ö£¬ÇÒÉÏÒ»¸ö·Ö¸ô²»Ö¹Ò»¸ö×ÖµÄÇé¿ö
+					// åªå¤„ç†æ¯”é»˜è®¤åˆ†å‰²å¤šä¸€ä¸ªå­—ï¼Œä¸”ä¸Šä¸€ä¸ªåˆ†éš”ä¸æ­¢ä¸€ä¸ªå­—çš„æƒ…å†µ
 					seq[i+j-2]--;
 					seq[i+j-1]++;
 				}
@@ -852,7 +852,7 @@ static void unigram_output(MMSEG *mm,uint8_t *seq,int len,char *out)
 				py_build_string(temp,mm->input+pos+seq[i],tlen2);
 				py_prepare_string(temp,temp,0);
 				item2=predict_search(l_predict_data,mm,temp,PSEARCH_PHRASE,0,i+j+1==len);
-				// ºóĞøÓïÁÏÓÅÏÈ¼¶¸ßÇÒÖØºÏÄÚÈİ²»Ò»Ñù£¬·ÅÆúÔÚµ±Ç°Î»ÖÃ½øĞĞ²éÕÒ
+				// åç»­è¯­æ–™ä¼˜å…ˆçº§é«˜ä¸”é‡åˆå†…å®¹ä¸ä¸€æ ·ï¼Œæ”¾å¼ƒåœ¨å½“å‰ä½ç½®è¿›è¡ŒæŸ¥æ‰¾
 				if(item2!=NULL && item2->lf[3]>item->lf[3])
 				{
 					predict_copy(l_predict_data,temp,item,-1);
@@ -867,16 +867,16 @@ static void unigram_output(MMSEG *mm,uint8_t *seq,int len,char *out)
 			i+=j;
 			pos+=tlen;
 			
-			// Ñ­»·ÓïÁÏÁªÏë
-			while(i<len)		// Ã»ÓĞµ½¾äÎ²
+			// å¾ªç¯è¯­æ–™è”æƒ³
+			while(i<len)		// æ²¡æœ‰åˆ°å¥å°¾
 			{
-				// ÕâÀïk±íÊ¾jÔª×éµÄºó¼¸¸ö´Ê
+				// è¿™é‡Œkè¡¨ç¤ºjå…ƒç»„çš„åå‡ ä¸ªè¯
 				for(k=j-1;k>=1;k--)
 				{
-					// baseÊÇk¸ö´ÊµÄ±àÂëÊıÁ¿£¬ext±íÊ¾ÁªÏëÓÃµ½µÄ¶îÍâ´ÊÓïµÄÊıÁ¿
+					// baseæ˜¯kä¸ªè¯çš„ç¼–ç æ•°é‡ï¼Œextè¡¨ç¤ºè”æƒ³ç”¨åˆ°çš„é¢å¤–è¯è¯­çš„æ•°é‡
 					int base,t,ext=1;
 					for(t=0,base=0;t<k;t++) base+=seq[i-k+t];
-					// prefixÊÇk¸ö´ÊµÄÎÄ±¾
+					// prefixæ˜¯kä¸ªè¯çš„æ–‡æœ¬
 					char *prefix=predict+strlen(predict)-2*base;
 					py_build_string(temp,mm->input+pos-base,base+seq[i]);
 					py_prepare_string(temp,temp,0);
@@ -997,18 +997,18 @@ static int unigram(MMSEG *mm)
 
 static int mmseg_split(MMSEG *mm)
 {
-	int mmcount;					/* ËùÓĞ¿ÉÄÜµÄÈıÔª×éµÄÊıÁ¿ */
-	uint8_t mmlen[80];				/* Ò»¸öÈıÔª×éµÄ×éºÏµÄ³¤¶È */
-	uint8_t mmword[80];			/* ÈıÔª×éµÚÒ»ÔªµÄ³¤¶È */
-	uint8_t mmword2[80];			/* ÈıÔª×éÇ°¶şÔªµÄ³¤¶È */
-	uint8_t mmnword[80];			/* ºòÑ¡×éºÏÓĞ¶àÉÙÔª */
-	int mmlogcf[80];			/* ¶ÔÓ¦±àÂëºÍ´ÊµÄ´ÊÆµ */
-	int mmlogcf2[80];			/* Ç°¶şÔªµÄ´ÊÆµ */
-	uint16_t mmavglen[80];			/* ÈıÔª×éµÄÆ½¾ù³¤¶È */
-	float mmvarlen[80];			/* ÈıÔª×éµÄ³¤¶È±ä»¯ */
-	uint8_t mmlong[80];			/* ºòÑ¡ÈıÔª×éÖĞ×î³¤µÄÒ»Åú */
-	struct y_mb_ci *mmfirst[80];	/* ¶ÔÓ¦´ÊÆµµÄÊ×Ñ¡´Ê */
-	int longest;					/* µ±Ç°×î³¤µÄºòÑ¡ÈıÔª×é */
+	int mmcount;					/* æ‰€æœ‰å¯èƒ½çš„ä¸‰å…ƒç»„çš„æ•°é‡ */
+	uint8_t mmlen[80];				/* ä¸€ä¸ªä¸‰å…ƒç»„çš„ç»„åˆçš„é•¿åº¦ */
+	uint8_t mmword[80];			/* ä¸‰å…ƒç»„ç¬¬ä¸€å…ƒçš„é•¿åº¦ */
+	uint8_t mmword2[80];			/* ä¸‰å…ƒç»„å‰äºŒå…ƒçš„é•¿åº¦ */
+	uint8_t mmnword[80];			/* å€™é€‰ç»„åˆæœ‰å¤šå°‘å…ƒ */
+	int mmlogcf[80];			/* å¯¹åº”ç¼–ç å’Œè¯çš„è¯é¢‘ */
+	int mmlogcf2[80];			/* å‰äºŒå…ƒçš„è¯é¢‘ */
+	uint16_t mmavglen[80];			/* ä¸‰å…ƒç»„çš„å¹³å‡é•¿åº¦ */
+	float mmvarlen[80];			/* ä¸‰å…ƒç»„çš„é•¿åº¦å˜åŒ– */
+	uint8_t mmlong[80];			/* å€™é€‰ä¸‰å…ƒç»„ä¸­æœ€é•¿çš„ä¸€æ‰¹ */
+	struct y_mb_ci *mmfirst[80];	/* å¯¹åº”è¯é¢‘çš„é¦–é€‰è¯ */
+	int longest;					/* å½“å‰æœ€é•¿çš„å€™é€‰ä¸‰å…ƒç»„ */
 	int i,k,l;
 	int result=0;
 
@@ -1017,12 +1017,12 @@ static int mmseg_split(MMSEG *mm)
 
     for(i=0;i<mm->count;)
     {
-        /* µÃµ½ÒÔiÎ»ÖÃ¿ªÊ¼µÄÈıÔª×é£¬ºÍÏà¹ØÍ³¼ÆĞÅÏ¢ */
+        /* å¾—åˆ°ä»¥iä½ç½®å¼€å§‹çš„ä¸‰å…ƒç»„ï¼Œå’Œç›¸å…³ç»Ÿè®¡ä¿¡æ¯ */
 		int w[3];
 		
 		longest=0;
 		mmcount=0;
-		/* w[0]·ÅÔÚ×îÇ°Ãæ£¬¿ÉÒÔÊ¹µÃµÚÒ»¸ö×î³¤´ÊÉÔÎ¢ÓĞµãÓÅÏÈ¶È */
+		/* w[0]æ”¾åœ¨æœ€å‰é¢ï¼Œå¯ä»¥ä½¿å¾—ç¬¬ä¸€ä¸ªæœ€é•¿è¯ç¨å¾®æœ‰ç‚¹ä¼˜å…ˆåº¦ */
 		for(w[0]=7;w[0]>=1;w[0]--){
 		if(i+w[0] > mm->count) continue;
 		if(!mmseg_exist(mm,mm->input+i,w[0])) continue;
@@ -1030,8 +1030,8 @@ static int mmseg_split(MMSEG *mm)
 		if(i+w[0]+w[1] > mm->count) continue;
 		if(w[1] && !mmseg_exist(mm,mm->input+i+w[0],w[1]))
 		{
-			/* ¼´Ê¹µ¥×Ö²»´æÔÚ£¬ÈÔÈ»¼ÌĞø²éÑ¯ÆäËû×éºÏ
-			 * ¶ÔÕı³£ÊäÈë·¨À´Ëµ£¬µ¥×Ö±ØÈ»´æÔÚ£¬¼õÉÙÒ»¸öÅĞ¶Ï·´¶ø»áÈÃÊäÈë·¨µÄËÙ¶ÈÌáÉı
+			/* å³ä½¿å•å­—ä¸å­˜åœ¨ï¼Œä»ç„¶ç»§ç»­æŸ¥è¯¢å…¶ä»–ç»„åˆ
+			 * å¯¹æ­£å¸¸è¾“å…¥æ³•æ¥è¯´ï¼Œå•å­—å¿…ç„¶å­˜åœ¨ï¼Œå‡å°‘ä¸€ä¸ªåˆ¤æ–­åè€Œä¼šè®©è¾“å…¥æ³•çš„é€Ÿåº¦æå‡
 			if(w[1]==1)
 			{
 				return -1;
@@ -1107,7 +1107,7 @@ static int mmseg_split(MMSEG *mm)
 			if(mmlen[mmcount]>longest)
 				longest=mmlen[mmcount];
 			
-			/* ¿ÉÄÜÔÚ×îºóÖ»Ê£ÏÂÒ»¸ö´Ê£¬Ö±½ÓÊä³ö¾ÍºÃ£¬Ê¹ÓÃÓïÁÏ¿â·´¶ø³ö´í */	
+			/* å¯èƒ½åœ¨æœ€ååªå‰©ä¸‹ä¸€ä¸ªè¯ï¼Œç›´æ¥è¾“å‡ºå°±å¥½ï¼Œä½¿ç”¨è¯­æ–™åº“åè€Œå‡ºé”™ */	
 			if(!w[1])
 			{
 				struct y_mb_ci *c=mmfirst[mmcount];
@@ -1117,15 +1117,15 @@ static int mmseg_split(MMSEG *mm)
 			mmcount++;
 			//printf("%d %d: %d %d %d %d %.2f\n",i,mmcount,w[0],w[1],w[2],mmlogcf[mmcount-1],mmavglen[mmcount-1]/100.0);
 			
-			/* ÕâÀïÌø³öÑ­»·£¬ÒòÎª±¾Ñ­»·ÀïÃæ×î³¤µÄ´ÊÁË£¬¸ü¶ÌµãÃ»ÓĞÒâÒå */
+			/* è¿™é‡Œè·³å‡ºå¾ªç¯ï¼Œå› ä¸ºæœ¬å¾ªç¯é‡Œé¢æœ€é•¿çš„è¯äº†ï¼Œæ›´çŸ­ç‚¹æ²¡æœ‰æ„ä¹‰ */
 			break;
 		}}}}
         if(longest==0)
         {
-            /* Ò»¸ö¶¼Ã»ÕÒµ½£¬Ò»¸ö²»ºÏ·¨µÄÊäÈë´® */
+            /* ä¸€ä¸ªéƒ½æ²¡æ‰¾åˆ°ï¼Œä¸€ä¸ªä¸åˆæ³•çš„è¾“å…¥ä¸² */
             return result;
         }
-        /* µÃµ½ÓĞ×î´ó³¤¶ÈµÄµÄÁĞ±í */
+        /* å¾—åˆ°æœ‰æœ€å¤§é•¿åº¦çš„çš„åˆ—è¡¨ */
         for(l=k=0;k<mmcount;k++)
         {
             if(mmlen[k]==longest)
@@ -1146,7 +1146,7 @@ static int mmseg_split(MMSEG *mm)
 				int count=mmlen[mmlong[k]];
 				if(count==prev_count)
 				{
-					/* ÓĞ¿ÉÄÜ³öÏÖ¼¸¸ö×éºÏÊÇÍ¬Ò»¸ö±àÂëµÄÇé¿ö£¬ÕâÖÖÇé¿öÏÂ²»ÖØ¸´²éÕÒ */
+					/* æœ‰å¯èƒ½å‡ºç°å‡ ä¸ªç»„åˆæ˜¯åŒä¸€ä¸ªç¼–ç çš„æƒ…å†µï¼Œè¿™ç§æƒ…å†µä¸‹ä¸é‡å¤æŸ¥æ‰¾ */
 					continue;
 				}
 				prev_count=count;
@@ -1163,7 +1163,7 @@ static int mmseg_split(MMSEG *mm)
 			}
 			if(!prev && longest>=5 && i+longest<mm->count)
 			{
-				/* ÕâÀï¼òµ¥´¦ÀíÄ³Ğ©ËÄÔª×é£¬µ«ÎÒÃÇ²»´¦ÀíÇ¶Ì×µÄÓïÁÏ */
+				/* è¿™é‡Œç®€å•å¤„ç†æŸäº›å››å…ƒç»„ï¼Œä½†æˆ‘ä»¬ä¸å¤„ç†åµŒå¥—çš„è¯­æ–™ */
 				int count=longest+1;
 				py_build_string(temp,mm->input+i,count);
 				py_prepare_string(temp,temp,0);
@@ -1181,7 +1181,7 @@ static int mmseg_split(MMSEG *mm)
 				full=0;
 				if(longest==4)
 				{
-					/* ÓĞ³£ÓÃ´Ê2+2£¬²»ÔÙ³¢ÊÔ²¿·ÖÓïÒôÁÏÆ¥Åä */
+					/* æœ‰å¸¸ç”¨è¯2+2ï¼Œä¸å†å°è¯•éƒ¨åˆ†è¯­éŸ³æ–™åŒ¹é… */
 					for(k=0;k<l;k++)
 					{
 						if(mmword[k]==2 && mmword2[k]==4)
@@ -1213,9 +1213,9 @@ static int mmseg_split(MMSEG *mm)
 				}
 				skip_2_2:;
 			}
-			if(prev) /* ÎÒÃÇÕÒµ½ÁË×îÓĞ¿ÉÄÜĞÔµÄÓïÁÏÁË */
+			if(prev) /* æˆ‘ä»¬æ‰¾åˆ°äº†æœ€æœ‰å¯èƒ½æ€§çš„è¯­æ–™äº† */
 			{
-				/* last: ×îºóÒ»¸ö´ÊµÄÆğÊ¼Î»ÖÃ base: ×îºóÒ»¸ö´ÊµÄ³¤¶È */
+				/* last: æœ€åä¸€ä¸ªè¯çš„èµ·å§‹ä½ç½® base: æœ€åä¸€ä¸ªè¯çš„é•¿åº¦ */
 				int last,base;
 				char *prefix,*predict;
 				
@@ -1241,14 +1241,14 @@ static int mmseg_split(MMSEG *mm)
 				}
 				else
 				{
-					/* 23Î»ÖÃÊÇÓïÁÏ£¬ÎÒÃÇÖ»Ó¦¸ÃÏÈÑ¡ÔñµÚÒ»¸ö£¬·ñÔò34Ò²ÊÇÓïÁÏµÄ»°£¬·ñÔò¾ÍÎŞ·¨ÀûÓÃÆµÂÊĞÅÏ¢ÁË */
+					/* 23ä½ç½®æ˜¯è¯­æ–™ï¼Œæˆ‘ä»¬åªåº”è¯¥å…ˆé€‰æ‹©ç¬¬ä¸€ä¸ªï¼Œå¦åˆ™34ä¹Ÿæ˜¯è¯­æ–™çš„è¯ï¼Œå¦åˆ™å°±æ— æ³•åˆ©ç”¨é¢‘ç‡ä¿¡æ¯äº† */
 					y_mb_ci_string2(mmfirst[which],mm->cand+strlen(mm->cand));
 					i+=mmword[which];
 					continue;
 				}
 				//printf("find in dict %s\n",predict);
 				
-				/* µİ¹é²éÕÒÊÇ·ñÓĞºÍµ±Ç°ÓïÁÏÏëÆ¥ÅäµÄ¶şÔª×é */
+				/* é€’å½’æŸ¥æ‰¾æ˜¯å¦æœ‰å’Œå½“å‰è¯­æ–™æƒ³åŒ¹é…çš„äºŒå…ƒç»„ */
 				prefix=predict+strlen(predict)-2*base;
 				while(prefix>predict && mm->count>last+base)
 				{
@@ -1284,7 +1284,7 @@ static int mmseg_split(MMSEG *mm)
 
         if(l==1)
         {
-            /* Ê×ÏÈÓ¦ÓÃ×î´óÆ¥ÅäÔ­Ôò */
+            /* é¦–å…ˆåº”ç”¨æœ€å¤§åŒ¹é…åŸåˆ™ */
             int mmword_len=mmword[mmlong[0]];
             y_mb_ci_string2(mmfirst[mmlong[0]],mm->cand+strlen(mm->cand));
 			i+=mmword_len;
@@ -1292,7 +1292,7 @@ static int mmseg_split(MMSEG *mm)
         }
         else
         {
-            /* Ó¦ÓÃÆ½¾ù´Ê³¤Ô­Ôò */
+            /* åº”ç”¨å¹³å‡è¯é•¿åŸåˆ™ */
             float lavg=0;
             int n=0;
             uint8_t largeavg[100];
@@ -1318,7 +1318,7 @@ static int mmseg_split(MMSEG *mm)
             }
             else
             {
-                /* Ó¦ÓÃ´Ê³¤µÄ½ÏĞ¡¾ù·½²îÔ­Ôò */
+                /* åº”ç”¨è¯é•¿çš„è¾ƒå°å‡æ–¹å·®åŸåˆ™ */
                 float svar=100;
                 uint8_t smallvar[100];
                 int o;
@@ -1329,7 +1329,7 @@ static int mmseg_split(MMSEG *mm)
                 }
                 for(o=k=0;k<n;k++)
                 {
-					//×îĞ¡¾ù·½²îÔ­Ôò¾­³£µÃµ½´íÎóÇÒÄÑÒÔÀí½âµÄ½á¹û£¬ÆÁ±ÎÕâĞĞÒÔÔİÊ±½ûÓÃ
+					//æœ€å°å‡æ–¹å·®åŸåˆ™ç»å¸¸å¾—åˆ°é”™è¯¯ä¸”éš¾ä»¥ç†è§£çš„ç»“æœï¼Œå±è”½è¿™è¡Œä»¥æš‚æ—¶ç¦ç”¨
                     //if(mmvarlen[largeavg[k]]==svar)
                     {
                         smallvar[o]=largeavg[k];
@@ -1345,7 +1345,7 @@ static int mmseg_split(MMSEG *mm)
                 }
                 else
                 {
-                    /* Ó¦ÓÃ×î´óµÄ×Ö´ÊÆµlogcfµÄºÍÔ­Ôò */
+                    /* åº”ç”¨æœ€å¤§çš„å­—è¯é¢‘logcfçš„å’ŒåŸåˆ™ */
                     int llog=-1000000;
                     uint8_t largelog=0;
                     char *out=mm->cand+strlen(mm->cand);
@@ -1483,7 +1483,7 @@ retry:
 	}
 	if(array->len==0)
 	{
-		// FIXME: ÕâÀï»¹ÊÇÖ»ÄÜ½â¾ö²¿·ÖµÄÆçÒå
+		// FIXME: è¿™é‡Œè¿˜æ˜¯åªèƒ½è§£å†³éƒ¨åˆ†çš„æ­§ä¹‰
 		c=strpbrk(temp,"uvi");
 		if(c!=NULL && c[1]=='\'')
 		{
@@ -1719,7 +1719,7 @@ int y_mb_predict_by_learn(struct y_mb *mb,char *s,int caret,char *out,int size,i
 	tmp=mb->match;
 	mb->match=1;
 
-	/* ¶ÔË«Æ´¼ÓĞÎÔÚÄ©Î²ÓĞÈı¸ö×ÖÄ¸µÄÇé¿öÏÂ£¬Ç¿ÖÆÈÏÎªÊÇ¾äÎ²¸¨ÖúÂë */
+	/* å¯¹åŒæ‹¼åŠ å½¢åœ¨æœ«å°¾æœ‰ä¸‰ä¸ªå­—æ¯çš„æƒ…å†µä¸‹ï¼Œå¼ºåˆ¶è®¤ä¸ºæ˜¯å¥å°¾è¾…åŠ©ç  */
 	if((mb->split==2 || l_predict_sp ) && mm.count>2 && !mm.assist_end && s[caret]=='\0')
 	{
 		char last[16];

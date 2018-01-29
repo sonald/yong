@@ -9,7 +9,7 @@
 
 L_HASH_STRING(fuzzy,FUZZY_ITEM,from);
 
-// µİ¹éÌí¼ÓÄ£ºıÂë£¬°ÑtoµÄÄ¿±ê±àÂëÌí¼Óµ½itemµÄÄ¿±êÖĞÈ¥
+// é€’å½’æ·»åŠ æ¨¡ç³Šç ï¼ŒæŠŠtoçš„ç›®æ ‡ç¼–ç æ·»åŠ åˆ°itemçš„ç›®æ ‡ä¸­å»
 static void fuzzy_recursive(FUZZY_TABLE *ft,FUZZY_ITEM *item,const char *to)
 {
 	FUZZY_ITEM key,*next;
@@ -18,7 +18,7 @@ static void fuzzy_recursive(FUZZY_TABLE *ft,FUZZY_ITEM *item,const char *to)
 	next=l_hash_table_find(ft,&key);
 	if(!next)
 	{
-		// ÏÖÔÚµÄtoÃ»ÓĞÄ£ºı£¬ËùÒÔÖ±½Ó·µ»Ø
+		// ç°åœ¨çš„toæ²¡æœ‰æ¨¡ç³Šï¼Œæ‰€ä»¥ç›´æ¥è¿”å›
 		return;
 	}
 	for(i=0;i<4;i++)
@@ -27,15 +27,15 @@ static void fuzzy_recursive(FUZZY_TABLE *ft,FUZZY_ITEM *item,const char *to)
 		const char *s=pto->code;
 		if(!s[0])
 		{
-			// to¶ÔÓ¦µÄÄ£ºıÂë²éÕÒÍê±Ï£¬¿ÉÒÔÍË³öÑ­»·ÁË
+			// toå¯¹åº”çš„æ¨¡ç³Šç æŸ¥æ‰¾å®Œæ¯•ï¼Œå¯ä»¥é€€å‡ºå¾ªç¯äº†
 			break;
 		}
-		// ±àÂëÏàÍ¬µÄÒÑ¾­´æÔÚ£¬¼ÌĞøÏÂÒ»Ïî
+		// ç¼–ç ç›¸åŒçš„å·²ç»å­˜åœ¨ï¼Œç»§ç»­ä¸‹ä¸€é¡¹
 		if(!strcmp(s,item->from))
 		{
 			continue;
 		}
-		// ÕÒÒ»¸ö¿ÕµÄÎ»ÖÃ½øĞĞÌí¼Ó
+		// æ‰¾ä¸€ä¸ªç©ºçš„ä½ç½®è¿›è¡Œæ·»åŠ 
 		for(j=0;j<4;j++)
 		{
 			char *t=item->to[j].code;

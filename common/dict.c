@@ -324,7 +324,7 @@ int dict_ui_new_real(void)
 	lf.lfClipPrecision=CLIP_DEFAULT_PRECIS;
 	lf.lfQuality=DEFAULT_QUALITY;
 	lf.lfPitchAndFamily=DEFAULT_PITCH;
-	l_gb_to_utf16("ÀŒÃÂ",lf.lfFaceName,sizeof(lf.lfFaceName));
+	l_gb_to_utf16("ÂÆã‰Ωì",lf.lfFaceName,sizeof(lf.lfFaceName));
 	hFont=CreateFontIndirect(&lf);
 	if(!hFont)
 	{
@@ -349,7 +349,7 @@ int dict_ui_new_real(void)
 
 	cy=GetSystemMetrics(SM_CYCAPTION)+GetSystemMetrics(SM_CYBORDER);
 	
-	y_im_str_encode(YT("–°–° ‰»Î∑®"),temp,0);
+	y_im_str_encode(YT("Â∞èÂ∞èËæìÂÖ•Ê≥ï"),temp,0);
 	l_dict=CreateWindowEx(WS_EX_TOPMOST,_T("yong_dict"),temp,WS_CAPTION|WS_OVERLAPPED|WS_SYSMENU,
 		(w-DICT_WIDTH*scale)/2,(h-DICT_HEIGHT*scale)/2,DICT_WIDTH*scale,DICT_HEIGHT*scale+cy,
 		0,0,GetModuleHandle(0),0);
@@ -359,10 +359,10 @@ int dict_ui_new_real(void)
 	l_entry=CreateWindowEx(WS_EX_CLIENTEDGE,WC_EDIT,_T(""),WS_CHILD|WS_VISIBLE|WS_TABSTOP,
 				0,2*scale,w-100*scale,26*scale,l_dict,0,GetModuleHandle(0),0);
 	Edit_LimitText(l_entry,64);
-	y_im_str_encode(YT("±æµÿ"),temp,0);
+	y_im_str_encode(YT("Êú¨Âú∞"),temp,0);
 	l_local=CreateWindowEx(0,WC_BUTTON,temp,WS_CHILD|WS_VISIBLE|WS_TABSTOP|BS_DEFPUSHBUTTON,
 				w-100*scale,2*scale,50*scale,26*scale,l_dict,(HMENU)ID_LOCAL,GetModuleHandle(0),0);
-	y_im_str_encode(YT("Õ¯¬Á"),temp,0);
+	y_im_str_encode(YT("ÁΩëÁªú"),temp,0);
 	l_network=CreateWindowEx(0,WC_BUTTON,temp,WS_CHILD|WS_VISIBLE|WS_TABSTOP,
 				w-50*scale,2*scale,50*scale,26*scale,l_dict,(HMENU)ID_NETWORK,GetModuleHandle(0),0);
 	l_view=CreateWindowEx(WS_EX_CLIENTEDGE,WC_EDIT,_T(""),
@@ -446,7 +446,7 @@ static void dict_ui_creat(void)
 	scale=y_ui_get_scale();
 
 	w=gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	y_im_str_encode(YT("Yong ‰»Î∑®"),temp,0);
+	y_im_str_encode(YT("YongËæìÂÖ•Ê≥ï"),temp,0);
 	gtk_window_set_keep_above(GTK_WINDOW(w),TRUE);
 	gtk_window_set_title(GTK_WINDOW(w),temp);
 	gtk_window_set_resizable(GTK_WINDOW(w),FALSE);
@@ -478,7 +478,7 @@ static void dict_ui_creat(void)
 	gtk_fixed_put(GTK_FIXED(w),l_entry,0,2*scale);
 	gtk_widget_show(l_entry);
 
-	y_im_str_encode(YT("±æµÿ"),temp,0);
+	y_im_str_encode(YT("Êú¨Âú∞"),temp,0);
 	l_local=gtk_button_new_with_label(temp);
 	//gtk_widget_set_usize(l_local,50,26);
 	gtk_widget_set_size_request(l_local,50*scale,26*scale);
@@ -487,7 +487,7 @@ static void dict_ui_creat(void)
 	g_signal_connect (G_OBJECT(l_local), "clicked",
 			G_CALLBACK (btn_query_cb), GINT_TO_POINTER(0));
 	
-	y_im_str_encode(YT("Õ¯¬Á"),temp,0);
+	y_im_str_encode(YT("ÁΩëÁªú"),temp,0);
 	l_network=gtk_button_new_with_label(temp);
 	//gtk_widget_set_usize(l_network,50,26);
 	gtk_widget_set_size_request(l_network,50*scale,26*scale);

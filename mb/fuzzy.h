@@ -1,16 +1,16 @@
 #pragma once
 
 typedef struct{
-	char code[8];			// Ä¿±ê±àÂë
-	char force;				// Ä¿±ê²»´æÔÚÊ±£¬ÊÇ·ñÇ¿ÖÆÌí¼Ó
+	char code[8];			// ç›®æ ‡ç¼–ç 
+	char force;				// ç›®æ ‡ä¸å­˜åœ¨æ—¶ï¼Œæ˜¯å¦å¼ºåˆ¶æ·»åŠ 
 }FUZZY_TO;
 
 typedef struct{
 	void *next;
-	char from[8];			// ÒªÄ£ºıµÄ±àÂë
-	FUZZY_TO to[4];			// Ä£ºıÄ¿±ê
-	void *begin;			// ÒªÄ£ºıµÄ×ÖÁĞ±íµÄ¿ªÊ¼
-	void *end;				// ÒªÄ£ºıµÄ×ÖÁĞ±íµÄ½áÊø
+	char from[8];			// è¦æ¨¡ç³Šçš„ç¼–ç 
+	FUZZY_TO to[4];			// æ¨¡ç³Šç›®æ ‡
+	void *begin;			// è¦æ¨¡ç³Šçš„å­—åˆ—è¡¨çš„å¼€å§‹
+	void *end;				// è¦æ¨¡ç³Šçš„å­—åˆ—è¡¨çš„ç»“æŸ
 }FUZZY_ITEM;
 
 typedef LHashTable FUZZY_TABLE;

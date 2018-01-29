@@ -19,7 +19,7 @@ static int GbkDestroy(void);
 static int GbkDoInput(int key);
 
 L_EXPORT(EXTRA_IM EIM)={
-	"ÄÚÂë",
+	"å†…ç ",
 	.Reset			=	GbkReset,
 	.DoInput		=	GbkDoInput,
 	.GetCandWords	=	GbkGetCandWords,
@@ -150,7 +150,7 @@ static int GbkOnVirtQuery(const char *ph)
 	len=strlen(ph);
 	if(len!= 1 && len!=2 && len!=4)
 		return IMR_BLOCK;
-	strcpy(StringGet,EIM.Translate("·´²é£º"));
+	strcpy(StringGet,EIM.Translate("åæŸ¥ï¼š"));
 	CandWordCount=0;
 	if(len==4)
 	{

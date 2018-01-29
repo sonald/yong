@@ -672,11 +672,11 @@ static int py_parse_r(PY_PARSER *parser,const char *input,int len)
 		{
 			struct py_item *p=py_all+out[i];
 			int last=input[p->len-1],next=input[p->len];
-			if(!strcmp(p->quan+1,"ve"))			// ·Ö´ÊµÄÊ±ºòÎÒÃÇ²»°ÑnveÖ®ÀàµÄµ±×÷ºÏ·¨Æ´Òô
+			if(!strcmp(p->quan+1,"ve"))			// åˆ†è¯çš„æ—¶å€™æˆ‘ä»¬ä¸æŠŠnveä¹‹ç±»çš„å½“ä½œåˆæ³•æ‹¼éŸ³
 				continue;
 			if(!next || next==py_split)
 				break;
-			/* ÏÂÒ»¸ö×ÖÄ¸ÊÇiuv¾Í¿ÉÒÔÈÏÎªÇ°ÃæµÄÇĞ·ÖÒÑ¾­³ö´íÁË */
+			/* ä¸‹ä¸€ä¸ªå­—æ¯æ˜¯iuvå°±å¯ä»¥è®¤ä¸ºå‰é¢çš„åˆ‡åˆ†å·²ç»å‡ºé”™äº† */
 			if(strchr("iuv",next))
 				continue;
 			if(!strcmp(p->quan+1,"iao") && !strncmp(input+p->len,"linpike",7))
@@ -687,20 +687,20 @@ static int py_parse_r(PY_PARSER *parser,const char *input,int len)
 			
 			if(next=='g' && (!input[p->len+1] || !strchr("aeou",input[p->len+1])))
 			{
-				/* ±ÜÃâÕâ¸öÇĞ·Ö´íÎó qingquangran£¨ÇéÈ¤°»È») */
+				/* é¿å…è¿™ä¸ªåˆ‡åˆ†é”™è¯¯ qingquangranï¼ˆæƒ…è¶£ç›ç„¶) */
 				if(strstr(p->quan,"uan"))
 					continue;
-				if(strstr(p->quan,"ian"))	// biangde(±È°ºµÄ)
+				if(strstr(p->quan,"ian"))	// biangde(æ¯”æ˜‚çš„)
 				{
 					if(p->quan[0]=='d')
 						i--;
 					continue;
 				}
 			}
-			/* Èç¹ûÁ½ÖÖÇĞ·Ö²»Ö¹²îÒ»¸ö±àÂë£¬Ôò²»ÓÃ¿¼ÂÇÀıÍâÇé¿ö£¬°´×î³¤Æ¥Åä¼´¿É */
+			/* å¦‚æœä¸¤ç§åˆ‡åˆ†ä¸æ­¢å·®ä¸€ä¸ªç¼–ç ï¼Œåˆ™ä¸ç”¨è€ƒè™‘ä¾‹å¤–æƒ…å†µï¼ŒæŒ‰æœ€é•¿åŒ¹é…å³å¯ */
 			if(p->len-py_all[out[i-1]].len!=1)
 				break;
-			/* ÔÚrºóÎŞÔÏÄ¸µÄÇé¿öÏÂerÓÅÏÈ½áºÏ */
+			/* åœ¨råæ— éŸµæ¯çš„æƒ…å†µä¸‹erä¼˜å…ˆç»“åˆ */
 			if(last=='e' && next=='r')
 			{
 				if(!input[p->len+1] || !strchr("aeiou",input[p->len+1]))
@@ -712,20 +712,20 @@ static int py_parse_r(PY_PARSER *parser,const char *input,int len)
 			}
 			if(last=='r' && !strncmp(input+p->len,"ong",3))
 				continue;
-			/* ÔÚnºóÎŞÔÏÄ¸µÄÇé¿öÏÂenÓÅÏÈ½áºÏ */
+			/* åœ¨nåæ— éŸµæ¯çš„æƒ…å†µä¸‹enä¼˜å…ˆç»“åˆ */
 			if(last=='e' && next=='n' && (!input[p->len+1] || !strchr("aeiouv",input[p->len+1])))
 				continue;
 			if(last=='e' && p->len>2 && input[p->len-2]=='u')
 			{
-				// ¶íÂŞË¹´ÊÆµÃ÷ÏÔ±ÈÂİË¿¸ß
+				// ä¿„ç½—æ–¯è¯é¢‘æ˜æ˜¾æ¯”èºä¸é«˜
 				if(!strncmp(input+p->len,"luosi",5))
 					continue;
 			}
 			
-			/* gnÓÅÏÈºÍºóÃæµÄÔÏÄ¸½áºÏ */
+			/* gnä¼˜å…ˆå’Œåé¢çš„éŸµæ¯ç»“åˆ */
 			if((last=='g' && strchr("aeou",next)) || (last=='n' && strchr("aeiouv",next)))
 			{
-				/* Ìí¼ÓÒ»Ğ©³£ÓÃµÄÀıÍâ */
+				/* æ·»åŠ ä¸€äº›å¸¸ç”¨çš„ä¾‹å¤– */
 				if(next=='e' && input[p->len+1]=='r')
 				{
 					int nnext=input[p->len+2];
@@ -753,7 +753,7 @@ static int py_parse_r(PY_PARSER *parser,const char *input,int len)
 						break;
 					}
 				}
-				if(last=='g' && next=='a' && input[p->len+1]=='\0')	// Ä©×Öa±Èga³£¼ûµÄ¶à
+				if(last=='g' && next=='a' && input[p->len+1]=='\0')	// æœ«å­—aæ¯”gaå¸¸è§çš„å¤š
 					break;
 				if((last=='n' || last=='g') && next=='o')
 				{
@@ -762,24 +762,24 @@ static int py_parse_r(PY_PARSER *parser,const char *input,int len)
 				}
 				if(!strchr("ivu",next) || strncmp(input+p->len,"on",2))
 				{
-					if(!strncmp(input,"dian",4))		//ÕâÀïdiaÒôºÜº±¼û
+					if(!strncmp(input,"dian",4))		//è¿™é‡ŒdiaéŸ³å¾ˆç½•è§
 						break;
-					if(!strncmp(input,"deng",4))			//denÒôºÜº±¼û
+					if(!strncmp(input,"deng",4))			//denéŸ³å¾ˆç½•è§
 						break;
 				}
 				if(!strncmp(input+p->len,"anquan",6))
 				{
-					// nanquan²»³É´Ê£¬anquan°²È«ºÜ³£¼û
+					// nanquanä¸æˆè¯ï¼Œanquanå®‰å…¨å¾ˆå¸¸è§
 					break;
 				}
 				if(!strncmp(input+p->len,"aolinpike",9))
 				{
-					// °ÂÁÖÆ¥¿Ë
+					// å¥¥æ—åŒ¹å…‹
 					break;
 				}
 				if(!strncmp(input+p->len,"alabo",5))
 				{
-					// labo ²»³É´Ê£¬alaboÊÇ´Ê
+					// labo ä¸æˆè¯ï¼Œalaboæ˜¯è¯
 					break;
 				}
 				if(!strcmp(input+p->len,"aoyun") || !strncmp(input+p->len,"aoyunhui",8))
@@ -848,7 +848,7 @@ static int py_parse_r(PY_PARSER *parser,const char *input,int len)
 		if(res && it.len>1 && input[it.len]!=0)
 		{
 			int last=input[it.len-1],next=input[it.len];
-			/* ÔÚrºóÎŞÔÏÄ¸µÄÇé¿öÏÂerÓÅÏÈ½áºÏ */
+			/* åœ¨råæ— éŸµæ¯çš„æƒ…å†µä¸‹erä¼˜å…ˆç»“åˆ */
 			if(last=='e' && next=='r' && !strchr("aeiou",input[it.len+1]))
 				res=0;
 			if(last=='e' && next=='n' && !strchr("aeiouv",input[it.len+1]))
@@ -856,12 +856,12 @@ static int py_parse_r(PY_PARSER *parser,const char *input,int len)
 			if(res) while((last=='g' && strchr("aeou",next)) ||
 			   (last=='n' && strchr("aeiouv",next)))
 			{
-				/* Ìí¼ÓÒ»Ğ©³£ÓÃµÄÀıÍâ */
+				/* æ·»åŠ ä¸€äº›å¸¸ç”¨çš„ä¾‹å¤– */
 				if(next=='e' && input[it.len+1]=='r' && !strchr("aeiou",input[it.len+1]))
 					break; 
-				if(next=='a' && input[it.len+1]=='\0')	// Ä©×Öa±Èga³£¼ûµÄ¶à
+				if(next=='a' && input[it.len+1]=='\0')	// æœ«å­—aæ¯”gaå¸¸è§çš„å¤š
 					break;
-				if(!strncmp(input,"dian",4))		//ÕâÀïdiaÒôºÜº±¼û
+				if(!strncmp(input,"dian",4))		//è¿™é‡ŒdiaéŸ³å¾ˆç½•è§
 					break;
 				it.len--;
 				if(bsearch(&it,py_all,PY_COUNT,sizeof(struct py_item),item_cmpr) &&
@@ -1277,7 +1277,7 @@ int py_conv_from_sp(const char *in,char *out,int size,int split)
 			i++;
 			if(in[i-1]=='a' || in[i-1]=='e' || in[i-1]=='o')
 			{
-				// ÒÔÕâ¸öĞÎÊ½±íÊ¾Ë«Æ´ÖĞµ¥¸ö³öÏÖµÄaeo£¬ÏÖÔÚÄÜÅĞ¶Ï¾äÎ²³öÏÖµÄ
+				// ä»¥è¿™ä¸ªå½¢å¼è¡¨ç¤ºåŒæ‹¼ä¸­å•ä¸ªå‡ºç°çš„aeoï¼Œç°åœ¨èƒ½åˆ¤æ–­å¥å°¾å‡ºç°çš„
 				out[pos++]=split;
 				//out[pos++]=' ';
 			}
@@ -1296,7 +1296,7 @@ int py_conv_from_sp(const char *in,char *out,int size,int split)
 	return pos;
 }
 
-/* ÊäÈëË«Æ´ºÍÈ«Æ´ÖĞµÄÎ»ÖÃ£¬µÃµ½ÔÚË«Æ´ÖĞµÄÎ»ÖÃ */
+/* è¾“å…¥åŒæ‹¼å’Œå…¨æ‹¼ä¸­çš„ä½ç½®ï¼Œå¾—åˆ°åœ¨åŒæ‹¼ä¸­çš„ä½ç½® */
 int py_pos_of_sp(const char *in,int pos)
 {
 	int i=0;
@@ -1470,7 +1470,7 @@ int py_conv_to_sp(const char *s,const char *zi,char *out)
 	int count;
 	struct py_item *it;
 	
-	/* Ìø¹ıµÚÒ»¸ö×Ö */
+	/* è·³è¿‡ç¬¬ä¸€ä¸ªå­— */
 	zi=hz_goto_next(zi,&hz);
 	if(!zi)
 	{
@@ -1483,24 +1483,24 @@ int py_conv_to_sp(const char *s,const char *zi,char *out)
 		count=py_tree_get(&py_index,s,py);
 		if(count<=0)
 		{
-			return -1;	// ·ÖÎö´íÎó
+			return -1;	// åˆ†æé”™è¯¯
 		}
-		if(count==1)			// ²»ĞèÒªÑ¡Ôñ
+		if(count==1)			// ä¸éœ€è¦é€‰æ‹©
 		{
 			it=py_all+py[0];
 		}
-		else if(!zi || !hz)		// Ã»ÓĞ¸ü¶àĞÅÏ¢£¬¼òµ¥×î³¤Æ¥Åä
+		else if(!zi || !hz)		// æ²¡æœ‰æ›´å¤šä¿¡æ¯ï¼Œç®€å•æœ€é•¿åŒ¹é…
 		{
 			it=py_all+py[count-1];
 		}
-		else if(count==2 && (py_all[py[0]].val&0xff)==0)	// Ö»ÓĞÒ»¸öÑ¡Ïî
+		else if(count==2 && (py_all[py[0]].val&0xff)==0)	// åªæœ‰ä¸€ä¸ªé€‰é¡¹
 		{
 			it=py_all+py[1];
 		}
 		else
 		{
 			int code=hz_get_first_code(hz);
-			if(code!=0)			// ÀûÓÃÏÂÒ»¸ö×ÖµÄ±àÂëĞÅÏ¢
+			if(code!=0)			// åˆ©ç”¨ä¸‹ä¸€ä¸ªå­—çš„ç¼–ç ä¿¡æ¯
 			{
 				int index=count;
 				while(--index>=0)
@@ -1518,7 +1518,7 @@ int py_conv_to_sp(const char *s,const char *zi,char *out)
 				}
 				it=py_all+py[count-1];
 			}
-			else 				// ×î³¤Æ¥Åä
+			else 				// æœ€é•¿åŒ¹é…
 			{
 				int index=count;
 				while(--index>=0)
@@ -1537,7 +1537,7 @@ int py_conv_to_sp(const char *s,const char *zi,char *out)
 		}
 		//printf("%s\n",it->quan);
 		s+=it->len;
-		/* ÕâÀï¼ÙÉè²»³öÏÖ¼òÆ´µÄÇé¿ö */
+		/* è¿™é‡Œå‡è®¾ä¸å‡ºç°ç®€æ‹¼çš„æƒ…å†µ */
 		*out++=(char)(it->val>>8);
 		*out++=(char)(it->val);
 		if(!zi && (s[0]==0 || s[0]==' ' || s[0]=='\t'))

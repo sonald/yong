@@ -1054,21 +1054,21 @@ static void main_expose(void)
 			continue;
 		switch(i){
 		case UI_BTN_CN:
-			y_im_str_encode("÷–",text,0);
+			y_im_str_encode("‰∏≠",text,0);
 			break;
 		case UI_BTN_EN:
-			y_im_str_encode("”¢",text,0);
+			y_im_str_encode("Ëã±",text,0);
 			break;
 		case UI_BTN_QUAN:
-			y_im_str_encode("∞Î",text,0);
+			y_im_str_encode("Âçä",text,0);
 			x+=step;
 			break;
 		case UI_BTN_BAN:
-			y_im_str_encode("»´",text,0);
+			y_im_str_encode("ÂÖ®",text,0);
 			x+=step;
 			break;
 		case UI_BTN_CN_BIAODIAN:
-			y_im_str_encode("°£",text,0);
+			y_im_str_encode("„ÄÇ",text,0);
 			x+=step*2;
 			break;
 		case UI_BTN_EN_BIAODIAN:
@@ -1076,11 +1076,11 @@ static void main_expose(void)
 			x+=step*2;
 			break;
 		case UI_BTN_SIMP:
-			y_im_str_encode("ºÚ",text,0);
+			y_im_str_encode("ÁÆÄ",text,0);
 			x+=step*3;
 			break;
 		case UI_BTN_TRAD:
-			y_im_str_encode("∑±",text,0);
+			y_im_str_encode("ÁπÅ",text,0);
 			x+=step*3;
 			break;
 		}

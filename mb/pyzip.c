@@ -43,53 +43,53 @@ static const uint16_t cp_list[]={
 };
 
 static const uint16_t cz_list[47]={
-	0xb5c4,			//µÄ
-	0xd2bb,			//Ò»
-	0xcac7,			//ÊÇ
-	0xc1cb,			//ÁË
-	0xb2bb,			//²»
-	0xd4da,			//ÔÚ
-	0xd3d0,			//ÓĞ
-	0xb8f6,			//¸ö
-	0xc8cb,			//ÈË
-	0xd5e2,			//Õâ
-	0xc9cf,			//ÉÏ
-	0xd6d0,			//ÖĞ
-	0xb4f3,			//´ó
-	0xceaa,			//Îª
-	0xc0b4,			//À´
-	0xced2,			//ÎÒ
-	0xb5bd,			//µ½
-	0xb3f6,			//³ö
-	0xd2aa,			//Òª
-	0xd2d4,			//ÒÔ
-	0xcab1,			//Ê±
-	0xbacd,			//ºÍ
-	0xb5d8,			//µØ
-	0xc3c7,			//ÃÇ
-	0xb5c3,			//µÃ
-	0xbfc9,			//¿É
-	0xcfc2,			//ÏÂ
-	0xb6d4,			//¶Ô
-	0xc9fa,			//Éú
-	0xd2b2,			//Ò²
-	0xd7d3,			//×Ó
-	0xbecd,			//¾Í
-	0xb9fd,			//¹ı
-	0xc4dc,			//ÄÜ
-	0xcbfb,			//Ëû
-	0xbbe1,			//»á
-	0xb6e0,			//¶à
-	0xb7a2,			//·¢
-	0xcbb5,			//Ëµ
-	0xb6f8,			//¶ø
-	0xd3da,			//ÓÚ
-	0xd7d4,			//×Ô
-	0xd6ae,			//Ö®
-	0xd3c3,			//ÓÃ
-	0xc4ea,			//Äê
-	0xd0d0,			//ĞĞ
-	0xbcd2,			//¼Ò
+	0xb5c4,			//çš„
+	0xd2bb,			//ä¸€
+	0xcac7,			//æ˜¯
+	0xc1cb,			//äº†
+	0xb2bb,			//ä¸
+	0xd4da,			//åœ¨
+	0xd3d0,			//æœ‰
+	0xb8f6,			//ä¸ª
+	0xc8cb,			//äºº
+	0xd5e2,			//è¿™
+	0xc9cf,			//ä¸Š
+	0xd6d0,			//ä¸­
+	0xb4f3,			//å¤§
+	0xceaa,			//ä¸º
+	0xc0b4,			//æ¥
+	0xced2,			//æˆ‘
+	0xb5bd,			//åˆ°
+	0xb3f6,			//å‡º
+	0xd2aa,			//è¦
+	0xd2d4,			//ä»¥
+	0xcab1,			//æ—¶
+	0xbacd,			//å’Œ
+	0xb5d8,			//åœ°
+	0xc3c7,			//ä»¬
+	0xb5c3,			//å¾—
+	0xbfc9,			//å¯
+	0xcfc2,			//ä¸‹
+	0xb6d4,			//å¯¹
+	0xc9fa,			//ç”Ÿ
+	0xd2b2,			//ä¹Ÿ
+	0xd7d3,			//å­
+	0xbecd,			//å°±
+	0xb9fd,			//è¿‡
+	0xc4dc,			//èƒ½
+	0xcbfb,			//ä»–
+	0xbbe1,			//ä¼š
+	0xb6e0,			//å¤š
+	0xb7a2,			//å‘
+	0xcbb5,			//è¯´
+	0xb6f8,			//è€Œ
+	0xd3da,			//äº
+	0xd7d4,			//è‡ª
+	0xd6ae,			//ä¹‹
+	0xd3c3,			//ç”¨
+	0xc4ea,			//å¹´
+	0xd0d0,			//è¡Œ
+	0xbcd2,			//å®¶
 };
 
 static inline int cp_find(const char *in)
@@ -319,7 +319,7 @@ int main(int arc,char *arg[])
 	if(strcmp(arg[1],temp2))
 		printf("FAIL\n");
 #else
-	cz_zip("ÎªÒÁÏûµÃÈËã¾ã²",temp);
+	cz_zip("ä¸ºä¼Šæ¶ˆå¾—äººæ†”æ‚´",temp);
 	cz_unzip(temp,temp2,-1);
 	printf("%s\n",temp2);
 #endif

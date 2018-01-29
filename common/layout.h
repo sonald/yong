@@ -4,13 +4,13 @@
 #include <stdint.h>
 #include <string.h>
 
-#define LAYOUT_FLAG_KEYUP		0x01		/* °´¼üµ¯ÆğÊ±ÏìÓ¦ */
-#define LAYOUT_FLAG_LRSEP		0x02		/* ×óÓÒ¶Ô³Æ²¼¾Ö */
+#define LAYOUT_FLAG_KEYUP		0x01		/* æŒ‰é”®å¼¹èµ·æ—¶å“åº” */
+#define LAYOUT_FLAG_LRSEP		0x02		/* å·¦å³å¯¹ç§°å¸ƒå±€ */
 #define LAYOUT_FLAG_SPACE		0x04
-#define LAYOUT_FLAG_BIAODIAN	0x08		/* ±êµãÊä³öÓÅ»¯£¬½öµ±lr=1,up=1Ê±ÓĞĞ§ */
+#define LAYOUT_FLAG_BIAODIAN	0x08		/* æ ‡ç‚¹è¾“å‡ºä¼˜åŒ–ï¼Œä»…å½“lr=1,up=1æ—¶æœ‰æ•ˆ */
 
 #define LAYOUT_KEY				"yuiophjkl;'nm,./qwertasdfgzxcvb"
-#define LAYOUT_MAP_SIZE			(4+126-32+1) /* Ç°ÃæËÄ¸öÊÇ \r\b\t\x1b */
+#define LAYOUT_MAP_SIZE			(4+126-32+1) /* å‰é¢å››ä¸ªæ˜¯ \r\b\t\x1b */
 
 #define KEY_LEFT_MASK			0xffff0000
 #define KEY_RIGHT_MASK			0x0000ffff
@@ -19,11 +19,11 @@ typedef struct{
 	uint16_t flag;
 	uint16_t timeout;
 	uint32_t timestamp;
-	uint32_t status;				/* ÆäÖĞÎª1µÄÎ»±íÊ¾¶ÔÓ¦¼üÒÑ°´ÏÂ */
-	uint16_t space;					/* ÊÇ·ñĞèÒª¶àÊä³öÒ»¸ö¿Õ¸ñ */
-	uint16_t mspace;				/* µ±Ç°¿Õ¸ñ¼üÊÇ·ñ°´ÏÂ */
-	char key[32];					/* ²ÎÓë²¢»÷µÄËùÓĞ¼ü */
-	uint32_t map[LAYOUT_MAP_SIZE];	/* ¼ü¶ÔÓ¦µÄmaskÖµ */
+	uint32_t status;				/* å…¶ä¸­ä¸º1çš„ä½è¡¨ç¤ºå¯¹åº”é”®å·²æŒ‰ä¸‹ */
+	uint16_t space;					/* æ˜¯å¦éœ€è¦å¤šè¾“å‡ºä¸€ä¸ªç©ºæ ¼ */
+	uint16_t mspace;				/* å½“å‰ç©ºæ ¼é”®æ˜¯å¦æŒ‰ä¸‹ */
+	char key[32];					/* å‚ä¸å¹¶å‡»çš„æ‰€æœ‰é”® */
+	uint32_t map[LAYOUT_MAP_SIZE];	/* é”®å¯¹åº”çš„maskå€¼ */
 }Y_LAYOUT;
 
 static inline int GET_LAYOUT_KEY(int i)
@@ -76,7 +76,7 @@ static inline int y_layout_find_key(Y_LAYOUT *layout,int flush)
 		if(flush) return flush;
 		return 0;
 	}
-	if((layout->flag&LAYOUT_FLAG_LRSEP)==0)		/* ·Ç²¢»÷²¼¾Ö */
+	if((layout->flag&LAYOUT_FLAG_LRSEP)==0)		/* éå¹¶å‡»å¸ƒå±€ */
 	{
 		for(i=0;i<LAYOUT_MAP_SIZE;i++)
 		{
@@ -133,7 +133,7 @@ static inline int y_layout_find_key(Y_LAYOUT *layout,int flush)
 	return 0;	
 }
 
-/* »ñµÃkeyÔÚÓÃ»§¶¨ÒåµÄkeyÖĞµÄĞòºÅ */
+/* è·å¾—keyåœ¨ç”¨æˆ·å®šä¹‰çš„keyä¸­çš„åºå· */
 static int y_layout_key_index(Y_LAYOUT *layout,int key)
 {
 	char *p=strchr(layout->key,key);

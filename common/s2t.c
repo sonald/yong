@@ -293,7 +293,7 @@ int s2t_select(const char *s)
 	eim->CurCandPage=0;
 	eim->CandPageCount=1;
 	eim->CodeLen=0;
-	strcpy(eim->StringGet,s2t_open==1?"¼ò×ª·±£º":"·±×ª¼ò£º");
+	strcpy(eim->StringGet,s2t_open==1?"ç®€è½¬ç¹ï¼š":"ç¹è½¬ç®€ï¼š");
 	y_im_str_encode(eim->StringGet,im.StringGet,0);
 	GBK_MAKE_STRING(code,eim->CodeInput);
 	y_im_str_encode(eim->CodeInput,im.CodeInput,DONT_ESCAPE);
