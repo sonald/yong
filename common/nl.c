@@ -211,11 +211,7 @@ static int GetSpanDays(int year,int yday)
 #endif
 }
 
-#if defined(_WIN32) && !defined(_WIN64)
-void y_im_nl_day(__time64_t t,char *s)
-#else
 void y_im_nl_day(time_t t,char *s)
-#endif
 {
 	int year,month,day;
 	struct tm *tm;
@@ -223,11 +219,7 @@ void y_im_nl_day(time_t t,char *s)
 
 	s[0]=0;
 
-#if defined(_WIN32) && !defined(_WIN64)
-	tm=_localtime64(&t);
-#else
 	tm=localtime(&t);
-#endif
 	if(tm==NULL)
 		return;
 /*#if START_YEAR==2001

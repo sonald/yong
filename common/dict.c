@@ -210,13 +210,8 @@ int y_dict_query_network(char *s)
 	return 0;
 }
 
-#ifdef _WIN32
-#include <commctrl.h>
-typedef HWND DICT_WIDGET;
-#else
 #include <gtk/gtk.h>
 typedef GtkWidget *DICT_WIDGET;
-#endif
 
 #define DICT_WIDTH		500
 #define DICT_HEIGHT		400
@@ -228,187 +223,6 @@ static DICT_WIDGET l_entry;
 static DICT_WIDGET l_local,l_network;
 static DICT_WIDGET l_view;
 
-#ifdef _WIN32
-
-#define ID_LOCAL		1001
-#define ID_NETWORK		1002
-
-static LRESULT CALLBACK dict_proc(HWND hWnd,UINT msg,WPARAM wParam,LPARAM lParam)
-{
-	switch(msg){
-	case WM_COMMAND:
-		switch(LOWORD(wParam)){
-		case ID_LOCAL:
-		{
-			TCHAR temp[64];
-			if(!dict) break;
-			GetWindowText(l_entry,temp,64);
-			if(temp[0])
-			{
-				char gb[128],*res;
-				y_im_str_encode_r(temp,gb);
-				res=y_dict_query(dict,gb);
-				if(res)
-				{
-					TCHAR data[4096];
-					y_im_str_encode(res,data,0);
-					l_free(res);
-					SetWindowText(l_view,data);
-				}
-				else
-				{
-					SetWindowText(l_view,_T(""));
-				}
-			}
-			break;
-		}
-		case ID_NETWORK:
-		{
-			TCHAR temp[64];
-			GetWindowText(l_entry,temp,64);
-			if(temp[0])
-			{
-				char gb[128];
-				y_im_str_encode_r(temp,gb);
-				y_dict_query_network(gb);
-			}
-			break;
-		}}
-		break;
-	case WM_SYSCOMMAND:
-		if(wParam==SC_CLOSE)
-		{
-			ShowWindow(hWnd,SW_HIDE);
-			break;
-		}
-		return DefWindowProc(hWnd,msg,wParam,lParam);
-	case WM_CLOSE:
-		ShowWindow(hWnd,SW_HIDE);
-		break;
-	case WM_TIMER:
-		ShowWindow(hWnd,SW_SHOW);
-		SetForegroundWindow(hWnd);
-		KillTimer(hWnd,wParam);
-		break;
-	default:
-		return DefWindowProc(hWnd,msg,wParam,lParam);
-	}
-	return 0;
-}
-
-int dict_ui_new_real(void)
-{
-	TCHAR temp[256];
-	WNDCLASS wc;
-	int w,h;
-	int cy;
-	RECT rc;
-	HFONT hFont;
-	HDC hdc;
-	int size;
-	LOGFONT lf;
-	double scale;
-	
-	if(!dict) return 0;
-	
-	scale=y_ui_get_scale();
-	
-	hdc=GetDC(NULL);	
-	size = -((12 * GetDeviceCaps(hdc, LOGPIXELSY)/ 72)); 
-	ReleaseDC(NULL,hdc);
-
-	memset(&lf,0,sizeof(lf));
-	lf.lfHeight=size;
-	lf.lfCharSet=DEFAULT_CHARSET;
-	lf.lfOutPrecision=CLIP_DEFAULT_PRECIS;
-	lf.lfClipPrecision=CLIP_DEFAULT_PRECIS;
-	lf.lfQuality=DEFAULT_QUALITY;
-	lf.lfPitchAndFamily=DEFAULT_PITCH;
-	l_gb_to_utf16("宋体",lf.lfFaceName,sizeof(lf.lfFaceName));
-	hFont=CreateFontIndirect(&lf);
-	if(!hFont)
-	{
-		l_gb_to_utf16("Fixedsys",lf.lfFaceName,sizeof(lf.lfFaceName));
-		hFont=CreateFontIndirect(&lf);
-	}
-
-	wc.style=0;
-	wc.lpfnWndProc=dict_proc;
-	wc.cbClsExtra=0;
-	wc.cbWndExtra=0;
-	wc.hInstance=GetModuleHandle(0);
-	wc.hIcon=0;
-	wc.hCursor=LoadCursor(NULL,IDC_ARROW);
-	wc.hbrBackground=(HBRUSH)(COLOR_BTNFACE+1);
-	wc.lpszMenuName=NULL;
-	wc.lpszClassName=_T("yong_dict");
-	RegisterClass(&wc);
-	
-	w=GetSystemMetrics(SM_CXSCREEN);
-	h=GetSystemMetrics(SM_CYSCREEN);
-
-	cy=GetSystemMetrics(SM_CYCAPTION)+GetSystemMetrics(SM_CYBORDER);
-	
-	y_im_str_encode(YT("小小输入法"),temp,0);
-	l_dict=CreateWindowEx(WS_EX_TOPMOST,_T("yong_dict"),temp,WS_CAPTION|WS_OVERLAPPED|WS_SYSMENU,
-		(w-DICT_WIDTH*scale)/2,(h-DICT_HEIGHT*scale)/2,DICT_WIDTH*scale,DICT_HEIGHT*scale+cy,
-		0,0,GetModuleHandle(0),0);
-	GetClientRect(l_dict,&rc);
-	w=rc.right-rc.left;h=rc.bottom-rc.top;
-		
-	l_entry=CreateWindowEx(WS_EX_CLIENTEDGE,WC_EDIT,_T(""),WS_CHILD|WS_VISIBLE|WS_TABSTOP,
-				0,2*scale,w-100*scale,26*scale,l_dict,0,GetModuleHandle(0),0);
-	Edit_LimitText(l_entry,64);
-	y_im_str_encode(YT("本地"),temp,0);
-	l_local=CreateWindowEx(0,WC_BUTTON,temp,WS_CHILD|WS_VISIBLE|WS_TABSTOP|BS_DEFPUSHBUTTON,
-				w-100*scale,2*scale,50*scale,26*scale,l_dict,(HMENU)ID_LOCAL,GetModuleHandle(0),0);
-	y_im_str_encode(YT("网络"),temp,0);
-	l_network=CreateWindowEx(0,WC_BUTTON,temp,WS_CHILD|WS_VISIBLE|WS_TABSTOP,
-				w-50*scale,2*scale,50*scale,26*scale,l_dict,(HMENU)ID_NETWORK,GetModuleHandle(0),0);
-	l_view=CreateWindowEx(WS_EX_CLIENTEDGE,WC_EDIT,_T(""),
-				WS_CHILD|WS_VISIBLE|WS_VSCROLL|ES_MULTILINE|ES_READONLY|ES_AUTOVSCROLL|ES_NOHIDESEL,
-				0,30*scale,w,h-30*scale,l_dict,0,GetModuleHandle(0),0);
-	
-	SetWindowFont(l_entry,hFont,TRUE);
-	SetWindowFont(l_local,hFont,TRUE);
-	SetWindowFont(l_network,hFont,TRUE);
-	SetWindowFont(l_view,hFont,TRUE);
-	//DeleteObject(hFont);
-	
-	return 1;
-}
-
-static void dict_ui_creat(void)
-{
-}
-
-static void dict_ui_show(int b)
-{
-	if(!dict) return;
-	if(b)
-	{
-		//ShowWindow(l_dict,SW_SHOW);
-		SetTimer(l_dict,1,50,0);
-	}
-	else
-	{
-		ShowWindow(l_dict,SW_HIDE);
-	}
-}
-
-static void dict_ui_set_query_text(char *s)
-{
-	TCHAR temp[256];
-	y_im_str_encode(s,temp,0);
-	SetWindowText(l_entry,temp);
-}
-
-static void dict_ui_do_query(void)
-{
-	PostMessage(l_dict,WM_COMMAND,ID_LOCAL,0);
-}
-
-#else
 
 void btn_query_cb(GtkButton *button,gpointer userdata)
 {
@@ -531,7 +345,6 @@ static void dict_ui_do_query(void)
 	btn_query_cb(0,0);
 }
 
-#endif
 
 int y_dict_query_and_show(void *p,char *s)
 {

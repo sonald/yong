@@ -12,9 +12,7 @@
 #include "im.h"
 #include "common.h"
 
-#ifndef _WIN32
 #include <dirent.h>
-#endif
 
 static YBUS_PLUGIN *plugin_list;
 static YBUS_CONNECT *conn_list;
@@ -403,19 +401,6 @@ static int process_compare(const int *v1,const int *v2)
 	return *v1-*v2;
 }
 
-#ifdef _WIN32
-static int get_process_list(int list[],int max)
-{
-	BOOL ret;
-	DWORD bytes;
-	int count;
-	ret=EnumProcess((DWORD*)list,max*sizeof(int),&bytes);
-	if(!ret) return 0;
-	count=(int)bytes/sizeof(DWORD);
-	qsort(list,count,sizeof(int),(LCmpFunc)process_compare);
-	return count;
-}
-#else
 
 static int process_filter(const struct dirent *d)
 {
@@ -447,7 +432,6 @@ static int get_process_list(int list[],int max)
 	free(namelist);
 	return count;
 }
-#endif
 
 static void ybus_recycle_connect(time_t now)
 {

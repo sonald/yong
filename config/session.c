@@ -8,9 +8,6 @@
 #include <stdarg.h>
 #include "ltricky.h"
 	
-#ifdef _WIN32
-#include <winsock2.h>
-#else
 #include <unistd.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -19,7 +16,6 @@
 typedef int SOCKET;
 #define INVALID_SOCKET		(-1)
 #define closesocket(s)		close(s)
-#endif
 	
 enum{
 	SESS_STATE_CLOSE=0,
@@ -60,13 +56,6 @@ struct _HttpSession{
 
 void *gz_extract(const void *input,int len,int *olen);
 
-#ifdef _WIN32
-static int sock_nonblock(SOCKET sock,int on)
-{
-	ioctlsocket(sock,FIONBIO,(u_long*)&on);
-	return 0;
-}
-#else	
 static int sock_nonblock(SOCKET sock,int on)
 {
 	int flag;
@@ -78,7 +67,6 @@ static int sock_nonblock(SOCKET sock,int on)
 		flag&=~O_NONBLOCK;
 	return fcntl (sock, F_SETFL,  flag );
 }
-#endif
 
 int http_session_sockc_connect(HttpSession *ss,const char *host,int port)
 {
@@ -851,11 +839,7 @@ static FILE *open_file_p(const char *path)
 		char temp[256];
 		strcpy(temp,path);
 		p=strrchr(temp,'/');*p=0;
-#ifdef _WIN32
-		mkdir(temp);
-#else
 		mkdir(temp,0755);
-#endif
 	}
 	return fopen(path,"wb");
 }

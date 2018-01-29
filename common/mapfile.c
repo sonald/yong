@@ -1,12 +1,8 @@
-#ifdef _WIN32
-#include <windows.h>
-#else
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/mman.h>
 #include <sys/stat.h>
-#endif
 
 struct y_mmap{
 	void *addr;
@@ -46,34 +42,6 @@ void *y_mmap_new(const char *fn)
 {
 	struct y_mmap *p;
 	p=calloc(1,sizeof(struct y_mmap));
-#ifdef _WIN32
-	{
-		HANDLE fd;
-		HANDLE map;
-		fd=CreateFileA(fn,GENERIC_READ,FILE_SHARE_READ,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
-		if(fd==INVALID_HANDLE_VALUE)
-		{
-			free(p);
-			return NULL;
-		}
-		p->size=(int)GetFileSize(fd,NULL);
-		map=CreateFileMapping(fd,NULL,PAGE_READONLY,0,0,NULL);
-		CloseHandle(fd);
-		if(!map)
-		{
-			free(p);
-			return NULL;
-		}
-		p->addr=MapViewOfFile(map,FILE_MAP_READ,0,0,0);
-		if(!p->addr)
-		{
-			CloseHandle(map);
-			free(p);
-			return NULL;
-		}
-		CloseHandle(map);
-	}
-#else
 	{
 		int fd;
 		struct stat st;
@@ -99,7 +67,6 @@ void *y_mmap_new(const char *fn)
 			return NULL;
 		}
 	}
-#endif
 	return p;
 }
 
@@ -107,11 +74,7 @@ void y_mmap_free(void *map)
 {
 	struct y_mmap *p=map;
 	if(!p) return;
-#ifdef _WIN32
-	UnmapViewOfFile(p->addr);
-#else
 	munmap(p->addr,p->size);
-#endif
 	free(p);
 }
 

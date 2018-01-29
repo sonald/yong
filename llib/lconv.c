@@ -4,52 +4,6 @@
 
 #ifdef USE_SYSTEM_ICONV
 
-#ifdef _WIN32
-#include <windows.h>
-
-static int gb_codepage;
-
-static void detect_codepage(void)
-{
-	if(MultiByteToWideChar(54936,0," ",-1,0,0)>0)
-		gb_codepage=54936;
-	else
-		gb_codepage=936;
-}
-
-void *l_gb_to_utf16(const char *s,void *out,int size)
-{
-	if(!gb_codepage) detect_codepage();
-	MultiByteToWideChar(gb_codepage,0,s,-1,out,size/sizeof(WCHAR));
-	return out;
-}
-
-char *l_gb_to_utf8(const char *s,char *out,int size)
-{
-	int len=MultiByteToWideChar(gb_codepage,0,s,-1,NULL,0);
-	WCHAR temp[len+1];
-	l_gb_to_utf16(s,temp,sizeof(temp));
-	l_utf16_to_utf8(temp,out,size);
-	return out;
-}
-
-char *l_utf8_to_gb(const char *s,char *out,int size)
-{
-	int len=MultiByteToWideChar(CP_UTF8,0,s,-1,NULL,0);
-	WCHAR temp[len+1];
-	l_utf8_to_utf16(s,temp,sizeof(temp));
-	l_utf16_to_gb(temp,out,size);
-	return out;
-}
-
-char *l_utf16_to_gb(const void *s,char *out,int size)
-{
-	if(!gb_codepage) detect_codepage();
-	WideCharToMultiByte(gb_codepage,0,s,-1,out,size,NULL,FALSE);
-	return out;
-}
-
-#else
 #include <iconv.h>
 
 static iconv_t gb_utf8=(iconv_t)-1;
@@ -147,6 +101,5 @@ char *l_utf16_to_gb(const void *s,char *out,int size)
 	return out;
 }
 
-#endif
 
 #endif

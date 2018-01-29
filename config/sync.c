@@ -11,9 +11,6 @@
 
 #include "config_ui.h"
 
-#ifdef _WIN32
-#include <winsock2.h>
-#endif
 
 const char *y_im_get_path(const char *type);
 
@@ -817,10 +814,6 @@ int SyncMain(void)
 	CUCtrl win;
 	LXml *custom;
 
-#ifdef _WIN32
-	WSADATA wsaData;
-	WSAStartup(0x0202,&wsaData);
-#endif
 	cu_init();
 	custom=l_xml_load((const char*)config_sync);
 	win=cu_ctrl_new(NULL,custom->root.child);

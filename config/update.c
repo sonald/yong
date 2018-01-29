@@ -11,11 +11,7 @@
 
 #include "config_ui.h"
 
-#ifdef _WIN32
-#include <winsock2.h>
-#else
 #include <unistd.h>
-#endif
 
 #include "custom_update.c"
 
@@ -128,11 +124,7 @@ static LArray *build_remote_file_list(void)
 	LXml *xml;
 	LXmlNode *n;
 	LArray *l;
-#ifdef _WIN32
-	snprintf(path,sizeof(path),"/sync/yong-win.xml");
-#else
 	snprintf(path,sizeof(path),"/sync/yong-lin.xml");
-#endif
 	ss=http_session_new();
 	http_session_set_host(ss,"yong.dgod.net",80);
 	//http_session_set_header(ss,"Cache-Control: no-cache\r\nPragma: no-cache\r\n");
@@ -204,11 +196,7 @@ static int download_remote_file(const FITEM *it)
 	int len;
 	const char *file=it->file;
 	if(file[0]=='/') file++;
-#ifdef _WIN32
-	snprintf(path,sizeof(path),"/sync/yong-win/%s",file);
-#else
 	snprintf(path,sizeof(path),"/sync/yong-lin/%s",file);
-#endif
 	ss=http_session_new();
 	http_session_set_host(ss,"yong.dgod.net",80);
 	//http_session_set_header(ss,"Cache-Control: no-cache\r\nPragma: no-cache\r\n");
@@ -265,9 +253,6 @@ static int download_remote_file(const FITEM *it)
 		}
 		if(remove(dele)!=0)
 		{
-#ifdef _WIN32
-			MoveFileExA(dele,NULL,MOVEFILE_DELAY_UNTIL_REBOOT);
-#endif
 		}
 	}
 	return 0;
@@ -352,10 +337,6 @@ int UpdateMain(void)
 	CUCtrl win;
 	LXml *custom;
 	
-#ifdef _WIN32
-	WSADATA wsaData;
-	WSAStartup(0x0202,&wsaData);
-#endif
 	cu_init();
 	custom=l_xml_load((const char*)config_update);
 	win=cu_ctrl_new(NULL,custom->root.child);

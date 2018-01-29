@@ -11,20 +11,11 @@
 #include "lfile.h"
 #include "ltricky.h"
 
-#ifdef _WIN32
-#include <windows.h>
-#else
 #include <unistd.h>
-#endif
 #include <ctype.h>
 
 struct _ldir{
-#ifdef _WIN32
-	_WDIR *dirp;
-	char utf8[MAX_PATH];
-#else
 	DIR *dirp;
-#endif
 };
 
 int l_zip_goto_file(FILE *fp,const char *name);
@@ -62,12 +53,6 @@ FILE *l_file_vopen(const char *file,const char *mode,va_list ap,size_t *size)
 		mode="rb";
 	}
 
-#ifdef _WIN32
-	wchar_t temp_path[MAX_PATH];
-	wchar_t temp_mode[8];
-
-	l_utf8_to_utf16(mode,temp_mode,sizeof(temp_mode));
-#endif
 	do
 	{
 		path=va_arg(ap,char*);
@@ -82,12 +67,7 @@ FILE *l_file_vopen(const char *file,const char *mode,va_list ap,size_t *size)
 				path=tmp;
 				zero_zfile=1;
 			}
-#ifdef _WIN32
-			l_utf8_to_utf16(path,temp_path,sizeof(temp_path));
-			fp=_wfopen(temp_path,temp_mode);
-#else
 			fp=fopen(path,mode);
-#endif
 			l_free(path);
 			if(fp && zero_zfile)
 				zfile=NULL;
@@ -109,12 +89,7 @@ FILE *l_file_vopen(const char *file,const char *mode,va_list ap,size_t *size)
 			{
 				path=(char*)file;
 			}
-#ifdef _WIN32
-			l_utf8_to_utf16(path,temp_path,sizeof(temp_path));
-			fp=_wfopen(temp_path,temp_mode);
-#else
 			fp=fopen(path,mode);
-#endif
 			if(free_path)
 			{
 				l_free(path);
@@ -123,9 +98,6 @@ FILE *l_file_vopen(const char *file,const char *mode,va_list ap,size_t *size)
 			break;
 		}
 	}while(!fp && path);
-#ifdef _WIN32
-	if(fp) setvbuf(fp,0,_IOFBF,32*1024);
-#endif
 	if(fp && zfile)
 	{
 		int ret=l_zip_goto_file(fp,zfile);
@@ -198,9 +170,6 @@ char *l_file_vget_contents(const char *file,size_t *length,va_list ap)
 	do
 	{
 		char temp[256];
-#ifdef _WIN32
-		wchar_t temp_path[MAX_PATH];
-#endif
 		path=va_arg(ap,char*);
 		if(path)
 		{
@@ -210,12 +179,7 @@ char *l_file_vget_contents(const char *file,size_t *length,va_list ap)
 		{
 			strcpy(temp,file);
 		}
-#ifdef _WIN32
-		l_utf8_to_utf16(temp,temp_path,sizeof(temp_path));
-		fp=_wfopen(temp_path,L"rb");
-#else
 		fp=fopen(temp,"rb");
-#endif
 		if(fp!=NULL)
 		{
 			struct stat st;
@@ -292,16 +256,8 @@ int l_file_set_contents(const char *file,const void *contents,size_t length,...)
 
 LDir *l_dir_open(const char *path)
 {
-#ifdef _WIN32
-	wchar_t temp[MAX_PATH];
-#endif
 	LDir *dir=l_new(LDir);
-#ifdef _WIN32
-	l_utf8_to_utf16(path,temp,MAX_PATH);
-	dir->dirp=_wopendir(temp);
-#else
 	dir->dirp=opendir(path);
-#endif
 	if(!dir->dirp)
 	{
 		l_free(dir);
@@ -312,65 +268,32 @@ LDir *l_dir_open(const char *path)
 
 void l_dir_close(LDir *dir)
 {
-#ifdef _WIN32
-	_wclosedir(dir->dirp);
-#else
 	closedir(dir->dirp);
-#endif
 	l_free(dir);
 }
 
 const char *l_dir_read_name(LDir *dir)
 {
-#ifdef _WIN32
-	struct _wdirent *entry;
-	do{
-		entry=_wreaddir(dir->dirp);
-	}while(entry && entry->d_name[0]=='.');
-	if(!entry) return NULL;
-	l_utf16_to_gb(entry->d_name,dir->utf8,sizeof(dir->utf8));
-	l_utf16_to_utf8(entry->d_name,dir->utf8,sizeof(dir->utf8));
-	char temp[256];
-	l_utf8_to_gb(dir->utf8,temp,256);
-	return dir->utf8;
-#else
 	struct dirent *entry;
 	do{
 		entry=readdir(dir->dirp);
 	}while(entry && entry->d_name[0]=='.');
 	if(!entry) return NULL;
 	return entry->d_name;
-#endif
 	return 0;
 }
 
 bool l_file_is_dir(const char *path)
 {
-#ifdef _WIN32
-	wchar_t temp[MAX_PATH];
-	int attributes;
-	l_utf8_to_utf16(path,temp,sizeof(temp));
-	attributes = GetFileAttributes(temp);
-	if(attributes == INVALID_FILE_ATTRIBUTES)
-		return false;
-	return (attributes & FILE_ATTRIBUTE_DIRECTORY)?true:false;
-#else
 	struct stat st;
 	if(stat(path,&st))
 		return false;
 	return S_ISDIR(st.st_mode);
-#endif
 }
 
 bool l_file_exists(const char *path)
 {
-#ifdef _WIN32
-	wchar_t temp[MAX_PATH];
-	l_utf8_to_utf16(path,temp,MAX_PATH);
-	return !_waccess(temp,F_OK);
-#else
 	return !access(path,F_OK);
-#endif
 }
 
 int l_file_copy(const char *dst,const char *src,...)
@@ -422,35 +345,17 @@ int l_get_line(char *line, size_t n, FILE *fp)
 
 int l_mkdir(const char *name,int mode)
 {
-#ifdef _WIN32
-	WCHAR temp[MAX_PATH];
-	l_utf8_to_utf16(name,temp,sizeof(temp));
-	return CreateDirectory(temp,NULL)?0:-1;
-#else
 	return mkdir(name,mode);
-#endif
 }
 
 int l_remove(const char *name)
 {
-#ifdef _WIN32
-	WCHAR temp[MAX_PATH];
-	l_utf8_to_utf16(name,temp,sizeof(temp));
-	DeleteFile(temp);
-#else
 	remove(name);
-#endif
 	return 0;
 }
 
 int l_rmdir(const char *name)
 {
-#ifdef _WIN32
-	WCHAR temp[MAX_PATH];
-	l_utf8_to_utf16(name,temp,sizeof(temp));
-	RemoveDirectory(temp);
-#else
 	rmdir(name);
-#endif
 	return 0;
 }

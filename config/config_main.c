@@ -4,12 +4,7 @@
 #include <sys/stat.h>
 #include <assert.h>
 
-#ifdef _WIN32
-#include <windows.h>
-#include <wchar.h>
-#else
 #include <unistd.h>
-#endif
 
 #include "custom.c"
 #include "sync.h"
@@ -43,7 +38,7 @@ const char *y_im_get_path(const char *type)
 	{
 		ret="/sdcard/yong";
 	}
-#elif !defined(_WIN32)
+#else
 	if(!strcmp(type,"HOME"))
 	{
 		static char path[256];
@@ -58,58 +53,6 @@ const char *y_im_get_path(const char *type)
 			ret=".";
 		else
 			ret="..";
-	}
-#else
-	if(!strcmp(type,"HOME"))
-	{
-		static int uac=-1;
-		if(uac==-1)
-		{
-			char *sys=getenv("ProgramFiles");
-			if(sys)
-			{
-				char path[MAX_PATH];
-				GetCurrentDirectoryA(sizeof(path),path);
-				uac=!strncasecmp(sys,path,strlen(sys));
-			}
-			else
-			{
-				uac=0;
-			}
-		}
-		if(uac==1)
-		{
-			static char path[256];
-			if(path[0]==0)
-			{
-				wchar_t *data=_wgetenv(L"AppData");
-				assert(data!=NULL);
-				l_utf16_to_utf8(data,path,sizeof(path));
-				strcat(path,"/yong");
-			}
-			ret=path;
-		}
-		else
-		{
-#ifdef _WIN64
-			ret="../.yong";
-#else
-			ret="./.yong";
-#endif
-		}
-		if(!l_file_exists(ret))
-			l_mkdir(ret,0700);
-	}
-	else
-	{
-#ifdef _WIN64
-		if(!strcmp(type,"LIB"))
-			ret=".";
-		else
-			ret="..";
-#else
-		ret=".";
-#endif
 	}
 #endif
 	return ret;
@@ -283,7 +226,6 @@ void cu_reload(void)
 
 int y_im_set_exec(void)
 {
-#ifndef _WIN32
 	int ret;
 	char *tmp;
 	char data[256];
@@ -310,19 +252,6 @@ int y_im_set_exec(void)
 		printf("yong: chdir fail\n");
 		return -1;
 	}
-#else
-	wchar_t file[256],*tmp;
-	int ret;
-	ret=GetModuleFileName(NULL,file,256);
-	if(ret<0 || ret>=256)
-		return -1;
-	file[ret]=0;
-	tmp=wcsrchr(file,'\\');
-	if(!tmp)
-		return -1;
-	*tmp=0;
-	SetCurrentDirectory(file);
-#endif
 	return 0;
 }
 

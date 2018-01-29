@@ -22,10 +22,6 @@ char *l_sprintf(const char *fmt,...)
 	if(len<0) ret=NULL;
 #else
 	len=vsnprintf(NULL,0,fmt,ap);
-#ifdef _WIN32
-	/* win2000 always return -1, so we set 256 to work */
-	if(len<=0) len=256;
-#endif
 	va_end(ap);
 	ret=l_alloc(len+1);
 	va_start(ap,fmt);
@@ -167,15 +163,6 @@ unsigned l_str_hash (const void *v)
 	return h;
 }
 
-#ifdef _WIN32
-void *l_strndup(const void *p,size_t n)
-{
-	char *r=l_alloc(n+1);
-	memcpy(r,p,n);
-	r[n]=0;
-	return r;
-}
-#endif
 
 void l_strup(char *s)
 {
@@ -188,17 +175,14 @@ void l_strup(char *s)
 	}
 }
 
-#ifndef _WIN32
 #include <dlfcn.h>
 static int (*p_vsscanf)(const char *buf,const char *fmt,va_list ap);
-#endif
 int l_sscanf(const char * buf, const char * fmt, ...)
 {
 	va_list args;
 	int i;
 	
 	va_start(args,fmt);
-#ifndef _WIN32
 	if(!p_vsscanf)
 	{
 		p_vsscanf=dlsym(0,"vsscanf");
@@ -207,9 +191,6 @@ int l_sscanf(const char * buf, const char * fmt, ...)
 #endif
 	}
 	i=p_vsscanf(buf,fmt,args);
-#else
-	i = vsscanf(buf,fmt,args);
-#endif
 	va_end(args);
 	return i;
 }

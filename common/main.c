@@ -711,11 +711,7 @@ static void update_config_skin(void)
 
 const void *YongGetSelectNumber(int n)
 {
-#ifdef _WIN32
-	static WCHAR temp[4];
-#else
 	static char temp[4];
-#endif
 	if(sym_select && sym_select_count)
 	{
 		if(n>=sym_select_count)
@@ -723,11 +719,7 @@ const void *YongGetSelectNumber(int n)
 			temp[0]=0;
 			return temp;
 		}
-#ifdef _WIN32
-		l_utf8_to_utf16(sym_select[n],temp,sizeof(temp));
-#else
 		snprintf(temp,sizeof(temp),"%s",sym_select[n]);
-#endif
 		return temp;
 	}
 	if(L_UNLIKELY(key_select_n[n]==' ' || !key_select_n[n]))
@@ -1255,13 +1247,6 @@ int YongHotKey(int key)
 			id->state=1;
 			YongShowMain(1);
 		}
-#ifdef _WIN32
-		if(MainNoShow && tip_main)
-		{
-			if(id->state) y_ui_show_tip(YT("打开输入法"));
-			else y_ui_show_tip(YT("关闭输入法"));
-		}
-#endif
 		return 1;
 	}
 	else if(key==key_cnen[0] || key==key_cnen[1])
@@ -2194,9 +2179,6 @@ int main(int arc,char *arg[])
 	int i;
 	char *xim=0;
 	
-#ifdef _WIN32
-	//attach_console();
-#endif
 	
 	VERBOSE("deal command line\n");
 
@@ -2204,14 +2186,12 @@ int main(int arc,char *arg[])
 	{
 		if(!strcmp(arg[i],"-d"))
 		{
-#ifndef _WIN32
 			int id=fork();
 			if(id==-1)
 				return EXIT_FAILURE;
 			else if(id>0)
 				return EXIT_SUCCESS;
 			else break;
-#endif
 		}
 		else if(!strcmp(arg[i],"-s"))
 		{
@@ -2248,84 +2228,6 @@ int main(int arc,char *arg[])
 			arc-=i+1;
 			arg+=i+1;
 		}
-#ifdef _WIN32
-		else if(!strcmp(arg[i],"-exec") && i+2==arc)
-		{
-			//MessageBoxA(0,arg[i+1],0,0);
-			int y_im_is_url(const char *s);
-			int show=SW_SHOWNORMAL;
-			char cmdline[256];
-			char *p=cmdline;
-			snprintf(cmdline,256,"%s",arg[i+1]);
-			y_im_expand_env(p);
-			if(y_im_is_url(p))
-			{
-				ShellExecuteA(NULL,"open",p,NULL,NULL,show);
-			}
-			else if(l_file_exists(p))
-			{
-				int len=strlen(p);
-				if(len>4 && !strcmp(p+len-4,".bat"))
-					show=SW_HIDE;
-				ShellExecuteA(NULL,"open",p,NULL,NULL,show);
-			}			
-			else
-			{
-				char *cmd,*param;
-				if(p[0]=='"')
-				{
-					param=strchr(p+1,'"');
-					if(!param) return 0;
-					cmd=l_strndup(p+1,param-p-1);
-					param++;
-					if(*param==' ') param++;
-					else param=0;
-				}
-				else
-				{
-					param=strchr(p+1,' ');
-					if(!param)
-					{
-						cmd=p;
-					}
-					else
-					{
-						cmd=l_strndup(p,param-p);
-						param++;
-					}
-				}
-				
-				SHELLEXECUTEINFOA info;
-				memset(&info,0,sizeof(info));
-				info.cbSize=sizeof(info);
-				info.lpFile=cmd;
-				info.lpParameters=param;
-				info.nShow=SW_SHOWNORMAL;
-				info.hwnd=y_ui_main_win();
-				info.lpVerb="open";
-#ifdef _WIN64
-				info.lpDirectory="..";
-#endif
-				if(strstr(cmd,"yong-config") && strstr(param,"--update"))
-				{
-					static const char *sys="C:\\Program Files";
-					char path[MAX_PATH];
-					OSVERSIONINFO ovi={.dwOSVersionInfoSize=sizeof(ovi)};
-					GetVersionEx(&ovi);
-					GetCurrentDirectoryA(sizeof(path),path);
-					int uac=!strncasecmp(sys,path,strlen(sys));
-					if(ovi.dwMajorVersion>=6 && uac!=0)
-					{
-						info.lpVerb="runas";
-					}
-					info.lpDirectory=NULL;
-				}
-				ShellExecuteExA(&info);
-				//ShellExecuteA(NULL,"open",cmd,param,NULL,show);
-			}			
-			return 0;
-		}
-#endif
 #if 0
 		else if(arc==3 && i==1 &&
 				arg[i][0]=='-' && arg[i][1]=='M' && arg[i][2]=='a' && arg[i][3]=='c')

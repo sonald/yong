@@ -1,58 +1,3 @@
-#ifdef _WIN32
-
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
-
-#include <windows.h>
-#include <tchar.h>
-
-#define WM_USER_TOOL		(WM_USER+116)
-#define WM_RELOAD_ALL		(WM_USER+200)
-
-void tools_reload_all(void)
-{
-	HWND hWnd=FindWindow(_T("yong_main"),_T("main"));
-	if(!hWnd)
-		return;
-	PostMessage(hWnd,WM_RELOAD_ALL,0,0);
-}
-
-int main(int arc,char *arg[])
-{
-	int i;
-	int wait_result=0;
-	int cmd=0;
-	int tool=1;
-	HWND hWnd;
-	int res=0;
-	
-	for(i=1;i<arc;i++)
-	{
-		if(!strcmp(arg[i],"--reload-all"))
-		{
-			tools_reload_all();
-			return 0;
-		}
-		if(!strcmp(arg[i],"-w"))
-			wait_result=1;
-		else if(!strcmp(arg[i],"-t") && i<arc-1)
-			tool=atoi(arg[++i]);
-		else
-			cmd=atoi(arg[i]);
-	}
-	hWnd=FindWindow(_T("yong_main"),_T("main"));
-	if(!hWnd)
-		return -1;
-	if(wait_result)
-		res=SendMessage(hWnd,WM_USER_TOOL,tool,cmd);
-	else
-		PostMessage(hWnd,WM_USER_TOOL,tool,cmd);
-	printf("%d\n",res);
-	return 0;
-}
-
-#else
 
 #include <unistd.h>
 #include <sys/socket.h>
@@ -148,4 +93,3 @@ int main(int arc,char *arg[])
 	printf("%d\n",res);
 	return 0;
 }
-#endif

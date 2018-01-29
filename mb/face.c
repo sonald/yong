@@ -136,10 +136,6 @@ typedef struct{
 	uint8_t begin;
 	uint8_t end;
 	uint8_t user;
-#ifdef _WIN32
-	// FIXME: bug of mingw or msvcrt, l_sscanf
-	uint32_t resv0;
-#endif
 }AUTO_PHRASE_CONFIG;
 static AUTO_PHRASE_CONFIG ap_conf;
 

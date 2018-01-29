@@ -462,7 +462,6 @@ int y_im_copy_file(char *src,char *dst)
 
 int y_im_set_exec(void)
 {
-#ifndef _WIN32
 	int ret;
 	char *tmp;
 	char data[256];
@@ -489,19 +488,6 @@ int y_im_set_exec(void)
 		printf("yong: chdir fail\n");
 		return -1;
 	}
-#else
-	wchar_t file[256],*tmp;
-	int ret;
-	ret=GetModuleFileName(NULL,file,256);
-	if(ret<0 || ret>=256)
-		return -1;
-	file[ret]=0;
-	tmp=wcsrchr(file,'\\');
-	if(!tmp)
-		return -1;
-	*tmp=0;
-	SetCurrentDirectory(file);
-#endif
 	return 0;
 }
 
@@ -643,7 +629,7 @@ const char *y_im_get_path(const char *type)
 		sprintf(path,"%s\\yong",sys);
 		ret=path;
 	}
-#elif !defined(_WIN32)
+#else
 	if(!strcmp(type,"HOME"))
 	{
 		static char path[256];
@@ -658,58 +644,6 @@ const char *y_im_get_path(const char *type)
 			ret=".";
 		else
 			ret="..";
-	}
-#else
-	if(!strcmp(type,"HOME"))
-	{
-		static int uac=-1;
-		if(uac==-1)
-		{
-			static const char *sys="C:\\Program Files";
-			if(sys)
-			{
-				char path[MAX_PATH];
-				GetCurrentDirectoryA(sizeof(path),path);
-				uac=!strncasecmp(sys,path,strlen(sys));
-			}
-			else
-			{
-				uac=0;
-			}
-		}
-		if(uac==1)
-		{
-			static char path[256];
-			if(path[0]==0)
-			{
-				wchar_t *data=_wgetenv(L"AppData");
-				assert(data!=NULL);
-				l_utf16_to_utf8(data,path,sizeof(path));
-				strcat(path,"/yong");
-			}
-			ret=path;
-		}
-		else
-		{
-#ifdef _WIN64
-			ret="../.yong";
-#else
-			ret="./.yong";
-#endif
-		}
-		if(!l_file_exists(ret))
-			l_mkdir(ret,0700);
-	}
-	else
-	{
-#ifdef _WIN64
-		if(!strcmp(type,"LIB"))
-			ret=".";
-		else
-			ret="..";
-#else
-		ret=".";
-#endif
 	}
 #endif
 	return ret;
@@ -1166,11 +1100,7 @@ char *y_im_str_escape(const char *s,int commit)
 {
 	char *ps;
 	struct tm *tm;
-#if defined(_WIN32) && !defined(_WIN64)
-	__time64_t t;
-#else
 	time_t t;
-#endif
 	char *tmp;
 	static char line[8192];
 
@@ -1241,13 +1171,8 @@ char *y_im_str_escape(const char *s,int commit)
 	strcpy(line,s);
 	s=line;
 	ps=strchr(s,'$');
-#if defined(_WIN32) && !defined(_WIN64)
-	t=_time64(NULL);
-	tm=_localtime64(&t);
-#else
 	t=time(NULL);
 	tm=localtime(&t);
-#endif
 
 	/* escape the time and $ self */
 	do{
@@ -1263,11 +1188,7 @@ char *y_im_str_escape(const char *s,int commit)
 		}
 		else if(!strncmp(ps,"/",1))
 		{
-#ifdef _WIN32
-			str_replace(ps-1,2,"\r\n");
-#else
 			str_replace(ps-1,2,"\n");
-#endif
 		}
 		/* english */
 		else if(!strncmp(ps,"ENGLISH",7))
@@ -1591,11 +1512,7 @@ int y_im_str_encode(const char *gb,void *out,int flags)
 
 void y_im_str_encode_r(const void *in,char *gb)
 {
-#ifdef _WIN32
-	l_utf16_to_gb(in,gb,4096);
-#else
 	l_utf8_to_gb(in,gb,4096);
-#endif
 }
 
 void y_im_url_encode(char *gb,char *out)
@@ -2008,38 +1925,24 @@ void *y_im_module_open(char *path)
 		strcpy(temp,path);
 	else
 		sprintf(temp,"%s/%s",y_im_get_path("LIB"),path);
-#ifdef _WIN32
-	WCHAR real[MAX_PATH];
-	l_utf8_to_utf16(temp,real,sizeof(real));
-	ret=(void*)LoadLibrary(real);
-#else
 	ret=dlopen(temp,RTLD_LAZY);
 	if(!ret)
 	{
 		printf("dlopen %s error %s\n",temp,dlerror());
 	}
-#endif
 	return ret;
 }
 
 void *y_im_module_symbol(void *mod,char *name)
 {
 	void *ret;
-#ifdef _WIN32
-	ret=(void*)GetProcAddress(mod,name);
-#else
 	ret=dlsym(mod,name);
-#endif
 	return ret;
 }
 
 void y_im_module_close(void *mod)
 {
-#ifdef _WIN32
-	FreeLibrary(mod);
-#else
 	dlclose(mod);
-#endif
 }
 
 int y_im_run_tool(char *func,void *arg,void **out)
@@ -2148,11 +2051,7 @@ void y_im_setup_config(void)
 	char *args[3]={0,config,0};
 	char prog[256];
 
-#ifdef _WIN32
-	char *setup="yong-config.exe";
-#else
 	char *setup="yong-config";
-#endif
 
 	sprintf(config,"%s/yong.ini",y_im_get_path("HOME"));
 
@@ -2160,12 +2059,10 @@ void y_im_setup_config(void)
 	{
 		args[0]=setup;
 	}
-#ifndef _WIN32
 	if(!args[0] && l_file_exists("/usr/bin/yong-config"))
 	{
 		args[0]="/usr/bin/yong-config";
 	}
-#endif
 	if(!args[0])
 	{
 		static char user[256];
@@ -2177,11 +2074,7 @@ void y_im_setup_config(void)
 		}
 		l_free(tmp);
 	}
-#ifndef _WIN32
 	if(!args[0]) args[0]="xdg-open";
-#else
-	if(!args[0]) args[0]="notepad.exe";
-#endif
 	sprintf(prog,"%s %s",args[0],config);
 
 	if(strstr(args[0],"yong-config"))
@@ -2198,24 +2091,15 @@ void y_im_setup_config(void)
 #if !defined(CFG_NO_HELPER)
 uint32_t y_im_tick(void)
 {
-#ifdef _WIN32
-	return GetTickCount();
-#else
 	struct timeval tv;
 	gettimeofday(&tv,0);
 	return (uint32_t)(tv.tv_sec*1000+tv.tv_usec/1000);
-#endif
 }
 
 struct im_helper{
-#ifdef _WIN32
-	HANDLE pid;
-	UINT_PTR timer;
-#else
 	GPid pid;
 	guint timer;
 	guint child;
-#endif
 	char *prog;
 	char *watch;
 	time_t mtime;
@@ -2225,103 +2109,13 @@ static struct im_helper helper_list[4];
 
 static time_t y_im_last_mtime(const char *file)
 {
-#ifdef _WIN32
-	struct _stat st;
-	wchar_t temp[MAX_PATH];
-	if(!file) return 0;
-	l_utf8_to_utf16(file,temp,sizeof(temp));
-	if(0!=_wstat(temp,&st))
-		return 0;
-	return st.st_mtime;
-#else
 	struct stat st;
 	if(!file) return 0;
 	if(0!=stat(file,&st))
 		return 0;
 	return st.st_mtime;
-#endif
 }
 
-#ifdef _WIN32
-static VOID CALLBACK HelperTimerProc(HWND hwnd,UINT uMsg,UINT_PTR idEvent,DWORD dwTime)
-{
-	int i;
-	for(i=0;i<4;i++)
-	{
-		struct im_helper *p=helper_list+i;
-		DWORD code;
-		if(!p->prog) continue;
-		if(p->timer!=idEvent) continue;
-		if(p->watch)
-		{
-			time_t mtime;
-			mtime=y_im_last_mtime(p->watch);
-			if(mtime!=p->mtime)
-			{
-				p->mtime=mtime;
-				if(p->cb)
-					p->cb();
-			}
-		}
-		if(!GetExitCodeProcess(p->pid,&code) || code!=STILL_ACTIVE)
-		{
-			CloseHandle(p->pid);
-			l_free(p->prog);
-			p->prog=0;
-			l_free(p->watch);
-			p->watch=0;
-			KillTimer(NULL,idEvent);
-		}
-		break;
-	}
-}
-
-void y_im_run_helper(char *prog,char *watch,void (*cb)(void))
-{
-	STARTUPINFO si;
-	PROCESS_INFORMATION pi;
-	BOOL ret;
-	int i;
-	WCHAR wprog[MAX_PATH];
-	int is_setup=0;
-	
-	if(strstr(prog,"yong-config.exe"))
-		is_setup=1;
-	
-	for(i=0;i<4;i++)
-	{
-		char *p=helper_list[i].prog;
-		if(!p) continue;
-		if(!is_setup && !strcmp(p,prog))
-			return;
-	}
-	l_utf8_to_utf16(prog,wprog,sizeof(wprog));
-	
-	memset(&si,0,sizeof(si));
-	si.cb=sizeof(si);
-	si.wShowWindow = SW_SHOWNORMAL;
-	si.dwFlags = STARTF_USESHOWWINDOW;
-	memset(&pi,0,sizeof(pi));
-	ret=CreateProcess(NULL,wprog,NULL,NULL,FALSE,0,NULL,NULL,&si,&pi);
-	if(!ret)
-		return;
-	CloseHandle(pi.hThread);
-
-	for(i=0;i<4;i++)
-	{
-		struct im_helper *p=helper_list+i;
-		if(p->prog) continue;
-		p->prog=l_strdup(prog);
-		p->watch=watch?l_strdup(watch):0;
-		p->pid=pi.hProcess;
-		p->mtime=y_im_last_mtime(watch);
-		p->timer=SetTimer(NULL,0,1000,HelperTimerProc);
-		p->cb=cb;
-		return;
-	}
-	CloseHandle(pi.hProcess);
-}
-#else
 static void  HelperExit(GPid pid,gint status,gpointer data)
 {
 	int i;
@@ -2405,7 +2199,6 @@ void y_im_run_helper(char *prog,char *watch,void (*cb)(void))
 	}
 	g_spawn_close_pid(pid);
 }
-#endif
 #endif
 
 int y_strchr_pos(char *s,int c)

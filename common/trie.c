@@ -8,20 +8,7 @@
 
 #define TRIE_PAGE			(512*1024)
 
-#ifdef _WIN32
-#include <windows.h>
-static void *alloc_page(void)
-{
-	void *p;
-	p=VirtualAlloc(NULL,TRIE_PAGE,MEM_COMMIT|MEM_RESERVE,PAGE_READWRITE);
-	return p;
-}
-
-static void free_page(void *p)
-{
-	VirtualFree(p,0,MEM_RELEASE);
-}
-#elif defined(EMSCRIPTEN)
+#if   defined(EMSCRIPTEN)
 static void *alloc_page(void)
 {
 	return malloc(TRIE_PAGE);

@@ -87,19 +87,7 @@ typedef struct{
 #define r16(x) if(2!=fread(&x,1,2,fp)) goto out;
 #define r32(x) if(4!=fread(&x,1,4,fp)) goto out;
 
-#if defined(_WIN32)
-#define skip(l) do{ \
-	if(!(l)) break; \
-	if((l)>256) { \
-		if(fseek(fp,l,SEEK_CUR)!=0) goto out;\
-	} else { \
-		char temp[256];\
-		if((l)!=fread(temp,1,(l),fp)) goto out; \
-	} \
-}while(0)
-#else
 #define skip(l) if(l && fseek(fp,l,SEEK_CUR)!=0) goto out;
-#endif
 
 static int l_zip_get_end_of_file(FILE *fp,LZipEndOfFile *e)
 {

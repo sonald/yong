@@ -66,47 +66,6 @@ static void sg_lock(int b)
 
 #endif
 
-#ifdef _WIN32
-#include <winsock2.h>
-
-typedef HANDLE pthread_t;
-#define pthread_create(a,b,c,d) \
-	(*a)=CreateThread(NULL,0,(c),(d),0,0)
-#define pthread_join(a,b) \
-	do{\
-		WaitForSingleObject(a,INFINITE);\
-		CloseHandle(a);\
-	}while(0)
-
-static void WaitSignal(int ms)
-{
-	SleepEx(TRUE,ms);
-}
-
-static void CALLBACK abort_apc(ULONG_PTR param)
-{
-}
-
-static void SetSignal(pthread_t th)
-{
-	QueueUserAPC(abort_apc,th,0);
-}
-
-static void setnonblock(SOCKET s)
-{
-	u_long b=1;
-	ioctlsocket(s,FIONBIO,&b);
-}
-
-static CRITICAL_SECTION l_mut;
-static void sg_lock(int b)
-{
-	if(b)
-		EnterCriticalSection(&l_mut);
-	else
-		LeaveCriticalSection(&l_mut);
-}
-#endif
 
 static int url_get_port(char *url)
 {
@@ -591,11 +550,6 @@ void CloudInit(void)
 #ifdef __linux__
 	pthread_mutex_init(&l_mut,0);
 #endif
-#ifdef _WIN32
-	WSADATA wsaData;
-	WSAStartup(0x0202,&wsaData);
-	InitializeCriticalSection(&l_mut);
-#endif
 
 	pthread_create(&l_th,0,sg_thread,l_cache);
 }
@@ -609,10 +563,6 @@ void CloudCleanup(void)
 
 #ifdef __linux__
 	pthread_mutex_destroy(&l_mut);
-#endif
-#ifdef _WIN32
-	WSACleanup();
-	DeleteCriticalSection(&l_mut);
 #endif
 }
 

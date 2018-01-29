@@ -1532,20 +1532,6 @@ int YongDrawInput(void)
 	{
 		if(im.StringGetEngine[0] || (eim && eim->CaretPos>=0 && eim->CaretPos<eim->CodeLen))
 		{
-#ifdef _WIN32
-			wchar_t temp[MAX_CAND_LEN+1];
-			wcscpy(temp,(wchar_t*)im.StringGet);
-			if(eim && eim->CaretPos>=0 && eim->CaretPos<eim->CodeLen)
-			{
-				wcsncat(temp,(wchar_t*)im.CodeInput,eim->CaretPos);
-				wcscpy(temp+wcslen((wchar_t*)im.StringGet)+eim->CaretPos,L"|");
-				wcscat(temp,(wchar_t*)im.CodeInput+eim->CaretPos);
-			}
-			else
-			{
-				wcscat(temp,(wchar_t*)im.CodeInput);
-			}
-#else
 			uint8_t temp[MAX_CAND_LEN+1];
 			strcpy((char*)temp,im.StringGet);
 			if(eim && eim->CaretPos>=0 && eim->CaretPos<eim->CodeLen)
@@ -1558,7 +1544,6 @@ int YongDrawInput(void)
 			{
 				strcat((char*)temp,im.CodeInput);
 			}
-#endif
 			//YongPreeditDraw((char*)temp,-1);
 			y_xim_preedit_draw((char*)temp,-1);
 		}
