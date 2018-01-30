@@ -2122,35 +2122,6 @@ void YongDestroyIM(void)
 #endif
 }
 
-#ifdef __WIN32
-#ifndef ATTACH_PARENT_PROCESS
-#define ATTACH_PARENT_PROCESS   ((DWORD)-1)
-#endif
-/*
-static void attach_console(void)
-{
-	if (fileno (stdout) != -1 &&
-		_get_osfhandle (fileno (stdout)) != -1)
-	{
-	}
-	else
-	{
-		typedef BOOL (* WINAPI AttachConsole_t) (DWORD);
-
-		AttachConsole_t p_AttachConsole =
-			(AttachConsole_t) GetProcAddress (GetModuleHandle (_T("kernel32.dll")),
-							  "AttachConsole");
-
-		if (p_AttachConsole != NULL && p_AttachConsole (ATTACH_PARENT_PROCESS))
-		{
-			freopen ("CONOUT$", "w", stdout);
-			dup2 (fileno (stdout), 1);
-			freopen ("CONOUT$", "w", stderr);
-			dup2 (fileno (stderr), 2);
-		}
-	}
-}*/
-#endif
 
 #ifndef CFG_BUILD_LIB
 

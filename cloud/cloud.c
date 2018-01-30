@@ -13,9 +13,6 @@
 #include "local.h"
 #include "cloud.h"
 
-#ifdef CFG_XIM_ANDROID
-#define rand() (int)lrand48()
-#endif
 
 static int SGY_Init(const char *arg);
 static void SGY_Reset(void);
@@ -489,7 +486,6 @@ static sg_res_t* bd_parse_res(sg_cache_t *c,char *s)
 	//	return NULL;
 	for(i=0,p=s+2;i<20;i++)
 	{
-#ifndef EMSCRIPTEN
 		n=0;
 		ret=l_sscanf(p,"[\"%256[^\"]\",%d%*[^]]]%n",cand,code+i,&n);
 		if(ret!=2 || n<=0)
@@ -500,16 +496,6 @@ static sg_res_t* bd_parse_res(sg_cache_t *c,char *s)
 		}
 		res[i]=l_strdup(cand);
 		p+=n;
-#else
-		p+=2;
-		for(n=0;n<255 && p[n]!='"';n++)
-			cand[n]=p[n];
-		cand[n]=0;
-		p+=n+2;
-		code[i]=atoi(p);
-		res[i]=l_strdup(cand);
-		p=strchr(p,']')+1;
-#endif
 		if(p[0]==']')
 		{
 			p++;
@@ -744,16 +730,6 @@ struct cloud_api sg_apis[]={
 		.key_parse=NULL,
 		.res_parse=bd_parse_res
 	},
-#ifdef EMSCRIPTEN
-	{
-		.name="google",
-		.host="www.google.com",
-		.query_key=NULL,
-		.query_res="/transliterate?text=%s&langpair=en%%7Czh&tlqt=1&version=2&num=20&tl_app=3&uv=b%%3B0%%3B0&jsonp=_callbacks_._19glbuaa5f",
-		.key_parse=NULL,
-		.res_parse=gg_parse_res
-	},
-#else
 	{
 		.name="google",
 		.host="yong.dgod.net",
@@ -762,7 +738,6 @@ struct cloud_api sg_apis[]={
 		.key_parse=NULL,
 		.res_parse=gg_parse_res
 	},
-#endif
 	{
 		.name="engkoo",
 		.host="s.p.msra.cn",

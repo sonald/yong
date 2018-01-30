@@ -9,9 +9,7 @@
   #define L_UNLIKELY(x) (x)
 #endif
 
-#ifdef _WIN32
-  #define L_EXPORT(x) __declspec(dllexport) extern x;x
-#elif __GNUC__ >= 4
+#if __GNUC__ >= 4
   #define L_EXPORT(x) extern x __attribute__((visibility("default")));x
 #else
   #define L_EXPORT(x) x

@@ -1,29 +1,6 @@
 #include <time.h>
 #include <stdio.h>
 
-#if 0
-#define START_YEAR 2001
-#define END_YEAR 2050
-
-//数组LunarMonthDay存入农历2000年到2100年每年中的月天数信息，
-//阴历每月只能是29或30天，一年用12（或13）个二进制位表示，对应位为1表30天，否则为29天
-static const unsigned short LunarMonthDay[] = {
-// 2001.1.1 -- 2050.12.31
-0xd4a8, 0xd4a0, 0xda50, 0x5aa8, 0x56a0, 0xaad8, 0x25d0, 0x92d0, 0xc958, 0xa950, //2010
-0xb4a0, 0xb550, 0xb550, 0x55a8, 0x4ba0, 0xa5b0, 0x52b8, 0x52b0, 0xa930, 0x74a8, //2020
-0x6aa0, 0xad50, 0x4da8, 0x4b60, 0x9570, 0xa4e0, 0xd260, 0xe930, 0xd530, 0x5aa0, //2030
-0x6b50, 0x96d0, 0x4ae8, 0x4ad0, 0xa4d0, 0xd258, 0xd250, 0xd520, 0xdaa0, 0xb5a0, //2040
-0x56d0, 0x4ad8, 0x49b0, 0xa4b8, 0xa4b0, 0xaa50, 0xb528, 0x6d20, 0xada0, 0x55b0};//2050
-
-//数组LanarMonth存放农历2001年到2050年闰月的月份，如没有则为0，每字节存两年
-static const unsigned char LunarMonth[]={
-0x40, 0x02, 0x07, 0x00, 0x50, //2010
-0x04, 0x09, 0x00, 0x60, 0x04, //2020
-0x00, 0x20, 0x60, 0x05, 0x00, //2030
-0x30, 0xb0, 0x06, 0x00, 0x50, //2040
-0x02, 0x07, 0x00, 0x50, 0x03}; //2050
-
-#else
 #define START_YEAR 1901
 #define END_YEAR 2100
 //数组LunarMonthDay存入农历2000年到2100年每年中的月天数信息，
@@ -76,7 +53,6 @@ static const unsigned char LunarMonth[]={
     0X00, 0X60, 0X04, 0X00, 0X20    // 2100 
 };
 
-#endif
 
 /* 返回指定年的闰月 */
 static int GetLeapMonth(int LunarYear)
@@ -234,12 +210,3 @@ void y_im_nl_day(time_t t,char *s)
 		sprintf(s,"%s%s",nl_mon[month-1],nl_day[day-1]);
 }
 
-#if 0
-int main(int arc,char *arg[])
-{
-	char day[256];
-	y_im_nl_day(time(NULL),day);
-	printf("%s\n",day);
-	return 0;
-}
-#endif

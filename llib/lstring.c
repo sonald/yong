@@ -64,16 +64,6 @@ void l_strfreev(char **list)
 	l_free(list);
 }
 
-#ifndef EMSCRIPTEN
-#if defined(_WIN32) || (!defined(__GLIBC__)/* && !defined(__BIONIC__)*/)
-/*static */char *stpcpy(char *dest,const char *src)
-{
-	do *dest++=*src;while(*src++!='\0');
-	return dest-1;
-}
-#endif
-#endif
-
 char *l_strjoinv(const char *sep,char **list)
 {
 	int i,len;

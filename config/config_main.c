@@ -23,22 +23,6 @@ int cu_quit_ui;
 const char *y_im_get_path(const char *type)
 {
 	const char *ret;
-#if defined(CFG_XIM_ANDROID)
-	if(!strcmp(type,"LIB"))
-	{
-		ret="/data/data/net.dgod.yong/lib";
-	}
-	else if(!strcmp(type,"HOME"))
-	{
-		ret="/sdcard/yong/.yong";
-		if(!l_file_exists(ret))
-			l_mkdir(ret,0700);
-	}
-	else
-	{
-		ret="/sdcard/yong";
-	}
-#else
 	if(!strcmp(type,"HOME"))
 	{
 		static char path[256];
@@ -54,7 +38,6 @@ const char *y_im_get_path(const char *type)
 		else
 			ret="..";
 	}
-#endif
 	return ret;
 }
 

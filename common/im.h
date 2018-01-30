@@ -7,10 +7,6 @@
 #include "s2t.h"
 #include "layout.h"
 
-#ifdef _WIN32
-#include <wchar.h>
-#endif
-
 typedef struct{
 	void *handle;
 	EXTRA_IM *eim;
@@ -29,13 +25,8 @@ typedef struct{
 	int BingSkip[2];
 	int Hint;				// 编码提示
 
-#if defined(_WIN32) || defined(CFG_XIM_ANDROID)
-	uint16_t StringGet[MAX_CAND_LEN+1];
-	uint16_t CodeInput[MAX_CODE_LEN*2+1];
-#else
 	char StringGet[(MAX_CAND_LEN+1)*3/2];
 	char CodeInput[(MAX_CODE_LEN+1)*3];
-#endif
 	int CodeLen;
 	char CandTable[10][(MAX_CAND_LEN+1)*2];
 	char CodeTips[10][(MAX_TIPS_LEN+1)*2];
@@ -53,11 +44,7 @@ typedef struct{
 	int ChinglishMode;
 	int SelectMode;
 	int StopInput;
-#if defined(_WIN32) || defined(CFG_XIM_ANDROID)
-	uint16_t Page[32];
-#else
 	char Page[32];
-#endif
 	double PageLen;
 	double PagePosX;
 	double PagePosY;

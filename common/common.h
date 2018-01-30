@@ -8,30 +8,11 @@
 #include <stdlib.h>
 #include <stdarg.h>
 
-#ifndef _WIN32
 #include <unistd.h>
 #include <dlfcn.h>
 #include <sys/time.h>
 #ifndef CFG_NO_GLIB
 #include <glib.h>
-#endif
-#else
-#ifndef _UNICODE
-#define _UNICODE
-#endif
-#ifndef UNICODE
-#define UNICODE
-#endif
-#ifndef _WIN64
-//#define WINVER 0x0500
-#endif
-#include <windows.h>
-#include <windowsx.h>
-#include <shlobj.h>
-#include <richedit.h>
-#include <wchar.h>
-#include <tchar.h>
-
 #endif
 
 #include "xim.h"
@@ -145,11 +126,7 @@ void y_im_history_update(void);
 int y_im_history_query(const char *src,char out[][MAX_CAND_LEN+1],int max);
 const char *y_im_history_get_last(int len);
 
-#if defined(_WIN32) && !defined(_WIN64)
-void y_im_nl_day(__time64_t t,char *s);
-#else
 void y_im_nl_day(time_t t,char *s);
-#endif
 
 void *y_dict_open(const char *file);
 void y_dict_close(void *p);

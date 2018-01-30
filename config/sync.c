@@ -747,7 +747,6 @@ int SyncDownload(CUCtrl p,int arc,char **arg)
 	return 0;
 }
 
-#ifndef CFG_XIM_ANDROID
 
 #include "custom_sync.c"
 
@@ -824,94 +823,3 @@ int SyncMain(void)
 	return 0;
 }
 
-#else
-
-#include <assert.h>
-#include <jni.h>
-#include <android/log.h>
-
-LKeyFile *config;
-int cu_quit_ui;
-
-static JNIEnv *a_env;
-static jobject a_obj;
-static char a_pass[64];
-
-#define  LOG_TAG    "libysync"
-#define  LOGI(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
-
-const char *y_im_get_path(const char *type)
-{
-	return "/sdcard/yong/.yong";
-}
-
-static void status(const char *fmt,...)
-{
-	char temp[256];
-	va_list ap;
-	jclass k;
-	jmethodID id;
-	jstring js;
-	
-	if(!a_env || !a_obj)
-		return;
-
-	va_start(ap,fmt);
-	vsnprintf(temp,sizeof(temp),fmt,ap);
-	va_end(ap);
-	
-	k=(*a_env)->GetObjectClass(a_env,a_obj);
-	js=(*a_env)->NewStringUTF(a_env,temp);
-	id=(*a_env)->GetMethodID(a_env,k,"status","(Ljava/lang/String;)V");
-	(*a_env)->CallVoidMethod(a_env,a_obj,id,js);
-	(*a_env)->DeleteLocalRef(a_env,k);
-	(*a_env)->DeleteLocalRef(a_env,js);
-}
-
-static int get_pass(char key[64])
-{
-	memcpy(key,a_pass,64);
-	return 0;
-}
-
-static void set_pass(JNIEnv *env,jstring pass)
-{
-	const char *t;
-	a_pass[0]=0;
-	if(!pass) return;
-	t=(*env)->GetStringUTFChars(env,pass,NULL);
-	if(!t) return;
-	snprintf(a_pass,sizeof(a_pass),"%s",t);
-	(*env)->ReleaseStringUTFChars(env,pass,t);
-}
-
-JNIEXPORT void JNICALL Java_net_dgod_yong_SyncThread_syncThread
-  (JNIEnv *env, jobject obj, jstring pass)
-{
-	cu_quit_ui=0;
-	a_env=env;
-	a_obj=obj;
-	if(in_sync)
-	{
-		status("正在进行同步");
-		return;
-	}
-	config=l_key_file_open("yong.ini",0,y_im_get_path("HOME"),NULL);
-	if(!config)
-	{
-		status("加载配置文件失败");
-		return;
-	}
-	set_pass(env,pass);
-	SyncDownload(NULL,0,NULL);
-	l_key_file_free(config);
-	config=NULL;
-}
-
-JNIEXPORT void JNICALL Java_net_dgod_yong_SyncThread_syncAbort
-  (JNIEnv *env, jobject sync)
-{
-	cu_quit_ui=1;
-}
-
-#endif

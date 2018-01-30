@@ -3,7 +3,6 @@
 
 extern EXTRA_IM EIM;
 
-#ifndef EMSCRIPTEN
 
 #ifdef __linux__
 
@@ -17,10 +16,6 @@ extern EXTRA_IM EIM;
 #include <netdb.h>
 #include <arpa/inet.h>
 
-#if defined(CFG_XIM_ANDROID) && L_WORD_SIZE==32
-#define rand() (int)lrand48()
-#define signal(s,f) bsd_signal(s,f)
-#endif
 
 #define WAKEUP_SIGNAL		SIGUSR2
 
@@ -587,92 +582,3 @@ void CloudUnlock(void)
 	sg_lock(0);
 }
 
-#else
-
-L_EXPORT(void webim_on_ajax_data(char *res,const char *req))
-{
-	sg_cache_t *c=l_cache;
-	if(!strcmp(req,"key"))
-	{
-		if(c->key) free(c->key);
-		c->key=sg_cur_api->key_parse(c,res);
-		//printf("key %s\n",c->key);
-		CloudSetSignal();
-	}
-	else if(!strncmp(req,"req ",4))
-	{
-		sg_res_t *r;
-		req+=4;
-		r=sg_parse(c,res);
-		if(r && !strcmp(c->req,req) && !strcmp(r->q,req))
-		{
-			c->req[0]=0;
-			if(EIM.Request)
-			{
-				EIM.Request(1);
-			}
-		}
-	}
-}
-
-extern void webim_ajax(const char *url,const char *arg);
-
-static int ensure_conn_key(void)
-{
-	char url[256];
-	if(l_cache->key || !sg_cur_api->query_key)
-		return 1;
-	snprintf(url,sizeof(url),"http://%s%s",
-			sg_cur_api->host,sg_cur_api->query_key);
-	webim_ajax(url,"key");
-	return 0;
-}
-
-static int get_cand_list(void)
-{
-	sg_cache_t *c=l_cache;
-	char format[256];
-	char url[384];
-	char arg[128];
-	snprintf(format,sizeof(format),"http://%s%s",
-		sg_cur_api->host,sg_cur_api->query_res);
-	if(sg_cur_api->query_key)
-		snprintf(url,sizeof(url),format,c->key,c->req);
-	else
-		snprintf(url,sizeof(url),format,c->req);
-	sprintf(arg,"req %s",c->req);
-	webim_ajax(url,arg);
-	return 0;
-}
-
-void CloudInit(void)
-{
-	ensure_conn_key();
-}
-
-void CloudCleanup(void)
-{
-}
-
-void CloudWaitReady(void)
-{
-}
-
-void CloudSetSignal(void)
-{
-	if(!ensure_conn_key())
-		return;
-	if(!l_cache->req[0])
-		return;
-	get_cand_list();
-}
-
-void CloudLock(void)
-{
-}
-
-void CloudUnlock(void)
-{
-}
-
-#endif

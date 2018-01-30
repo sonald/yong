@@ -3,11 +3,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-#ifdef _WIN32
-#include <malloc.h>
-#else
 #include <alloca.h>
-#endif
 
 #define l_alloc(s) malloc(s)
 #define l_calloc(n,s) malloc((n)*(s))
@@ -26,13 +22,8 @@
 #define l_free free
 #define l_strdup(p) strdup(p)
 
-#ifndef _WIN32
 #define l_strndup(p,n) strndup(p,n)
 #define l_alloca(s) alloca(s)
-#else
-void *l_strndup(const void *p,size_t n);
-#define l_alloca(s) _alloca(s)
-#endif
 
 #endif/*_LMEM_H_*/
 

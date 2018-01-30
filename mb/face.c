@@ -3093,7 +3093,6 @@ static int PinyinDoInput(int key)
 	return IMR_DISPLAY;
 }
 
-#ifndef CFG_XIM_ANDROID
 L_EXPORT(int tool_save_user(void *arg,void **out))
 {
 	if(!mb)
@@ -3154,4 +3153,3 @@ L_EXPORT(int tool_merge_user(void *arg,void **out))
 	fclose(fp);
 	return 0;
 }
-#endif

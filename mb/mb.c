@@ -5956,7 +5956,6 @@ static int mb_zi_virt_cmp(const void *p1,const void *p2)
 	return y_mb_code_cmp(z1->code,z2->code,Y_MB_KEY_SIZE);
 }
 
-#ifndef CFG_XIM_ANDROID
 
 
 
@@ -6566,7 +6565,6 @@ int y_mb_sort_file(const char *fn,int flag,const char *with)
 	return 0;
 }
 
-#endif
 
 #ifdef TOOLS_TEST
 
@@ -6591,7 +6589,6 @@ int main(int arc,char *arg[])
 }
 #endif
 
-#ifndef CFG_XIM_ANDROID
 L_EXPORT(int tool_main(int arc,char **arg))
 {
 	struct y_mb *mb;
@@ -6800,4 +6797,3 @@ L_EXPORT(int tool_main(int arc,char **arg))
 	y_mb_free(mb);
 	return 0;
 }
-#endif

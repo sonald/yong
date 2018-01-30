@@ -8,17 +8,6 @@
 
 #define TRIE_PAGE			(512*1024)
 
-#if   defined(EMSCRIPTEN)
-static void *alloc_page(void)
-{
-	return malloc(TRIE_PAGE);
-}
-
-static void free_page(void *p)
-{
-	free(p);
-}
-#else
 #include <sys/mman.h>
 static void *alloc_page(void)
 {
@@ -33,7 +22,6 @@ static void free_page(void *p)
 	munmap(p,TRIE_PAGE);
 	//free(p);
 }
-#endif
 
 trie_tree_t *trie_tree_new(void)
 {

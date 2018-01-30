@@ -69,9 +69,6 @@ int InitExtraIM(IM *im,EXTRA_IM *eim,const char *arg)
 	eim->GetLast=y_im_history_get_last;
 	eim->ShowTip=y_ui.show_tip;
 	eim->Translate=y_translate_get;
-#ifdef CFG_XIM_ANDROID
-	eim->Log=YongLogWrite;
-#endif
 	
 	if(eim->Flag & IM_FLAG_ASYNC)
 	{
@@ -96,10 +93,6 @@ int y_im_load_extra(IM *im,const char *name)
 	p=y_im_get_config_string(name,"overlay");
 	y_im_update_sub_config(p);
 	l_free(p);
-#ifdef CFG_XIM_WEBIM
-	extern EXTRA_IM EIM;
-	eim=&EIM;
-#else
 	p=y_im_get_config_string(name,"engine");
 	if(!p)
 	{
@@ -130,7 +123,6 @@ int y_im_load_extra(IM *im,const char *name)
 		im->handle=NULL;
 		return -1;
 	}
-#endif
 	im->eim=eim;
 
 	p=y_im_get_config_string(name,"arg");

@@ -1505,12 +1505,7 @@ int YongDrawInput(void)
 	{
 		InputTheme.RealWidth=TempWidth;
 		InputTheme.RealHeight=TempHeight;
-#ifdef G_OS_WIN32
-		MoveWindow(InputWin,InputWin_X,InputWin_Y,
-			InputTheme.RealWidth,InputTheme.RealHeight,TRUE);
-#else
 		gtk_window_resize(GTK_WINDOW(InputWin),InputTheme.RealWidth,InputTheme.RealHeight);
-#endif
 	}
 	if(PageWidth && InputTheme.line==2)
 	{
@@ -1522,11 +1517,7 @@ int YongDrawInput(void)
 	YongMoveInput(POSITION_ORIG,POSITION_ORIG);
 	YongShowInput(1);
 
-#ifdef G_OS_WIN32
-	InvalidateRect(InputWin,0,FALSE);
-#else
 	gtk_widget_queue_draw(InputWin);
-#endif
 	/* show at preedit area */
 	if(((eim && !eim->CandWordCount) || im.Preedit==1) && im.CodeInput[0])
 	{

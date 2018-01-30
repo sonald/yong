@@ -266,13 +266,11 @@ COPY:
 			goto out;
 		if(!y_im_send_file(s))
 			goto out;
-#ifndef CFG_XIM_ANDROID
 		if(strstr(s,"$/"))
 		{
 			YongSendClipboard(s);
 			goto out;
 		}
-#endif
 	}
 
 	y_im_speed_update(0,s);
@@ -519,102 +517,18 @@ int y_im_config_path(void)
 	return 0;
 }
 
-#if defined(CFG_XIM_ANDROID)
-static void get_so_path(const char *file,char *out)
-{
-	FILE *fp;
-	char line[1024];
-	if(out!=NULL)
-		strcpy(out,"/data/data/net.dgod.yong/lib");
-	fp=fopen("/proc/self/maps","r");
-	if(!fp)
-		return;
-	while(l_get_line(line,sizeof(line),fp)>=0)
-	{
-		char *p;
-		if((p=strstr(line,file)))
-		{
-			if(p==line)
-				break;
-			p[-1]=0;
-			p=strchr(line,'/');
-			if(p==NULL)
-				break;
-			//YongLogWrite("%s\n",p);
-			if(out!=NULL)
-				strcpy(out,p);
-			break;
-		}
-	}
-	fclose(fp);
-	
-}
-#endif
 
 const char *y_im_get_path(const char *type)
 {
 	const char *ret;
-#if defined(CFG_XIM_ANDROID)
-	if(!strcmp(type,"LIB"))
-	{
-		static char lib_path[128];
-		//ret="/data/data/net.dgod.yong/lib";
-		if(!lib_path[0])
-			get_so_path("libyong.so",lib_path);
-		ret=lib_path;			
-	}
-	else if(!strcmp(type,"HOME"))
-	{
-		static char home_path[128];
-		if(!home_path[0])
-		{
-			char *p=getenv("EXTERNAL_STORAGE");
-			if(!p)
-			{
-				strcpy(home_path,"/sdcard/yong/.yong");
-			}
-			else
-			{
-				sprintf(home_path,"%s/yong/.yong",p);
-			}
-		}
-		if(!l_file_exists(home_path))
-		{
-			int res=l_mkdir(home_path,0700);
-		}
-		ret=home_path;
-	}
-	else
-	{
-		static char data_path[128];
-		if(!data_path[0])
-		{
-			char *p=getenv("EXTERNAL_STORAGE");
-			if(!p)
-			{
-				strcpy(data_path,"/sdcard/yong");
-			}
-			else
-			{
-				sprintf(data_path,"%s/yong",p);
-			}
-		}
-		ret=data_path;
-	}
-#elif defined(CFG_XIM_WEBIM)
-	return "yong";
-#elif defined(CFG_XIM_METRO)
+#if   defined(CFG_XIM_METRO)
 	char sys[128];
 	if(!SHGetSpecialFolderPathA(NULL,sys,CSIDL_PROGRAM_FILESX86,FALSE))
 		SHGetSpecialFolderPathA(NULL,sys,CSIDL_PROGRAM_FILES,FALSE);
 	if(!strcmp(type,"LIB"))
 	{
 		static char path[256];
-#ifdef _WIN64
-		sprintf(path,"%s\\yong\\w64",sys);
-#else
 		sprintf(path,"%s\\yong",sys);
-#endif
 		ret=path;
 	}
 	else if(!strcmp(type,"HOME"))
@@ -1501,11 +1415,7 @@ int y_im_str_encode(const char *gb,void *out,int flags)
 		strcpy(s,gb);
 	}
 
-#if defined(_WIN32) || defined(CFG_XIM_ANDROID)
-	l_gb_to_utf16(s,out,8192);
-#else
 	l_gb_to_utf8(s,out,8192);
-#endif
 
 	return key;
 }
@@ -2443,7 +2353,6 @@ void y_im_verbose(const char *fmt,...)
 	va_end(ap);
 }
 
-#ifndef CFG_XIM_ANDROID
 int y_im_handle_menu(const char *cmd)
 {
  	if(!strcmp(cmd,"$CONFIG"))
@@ -2558,4 +2467,3 @@ int y_im_handle_menu(const char *cmd)
 	}
 	return 0;
 }
-#endif
