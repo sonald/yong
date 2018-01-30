@@ -127,46 +127,12 @@ FILE *l_file_open(const char *file,const char *mode,...)
 	return fp;
 }
 
-#if 0
-char *l_file_vget_contents(const char *file,size_t *length,va_list ap)
-{
-	FILE *fp;
-	char *contents;
-	size_t size;
-	const char *zfile;
-	
-	zfile=file_is_in_zip(file);
-	if(zfile!=NULL)
-	{
-		char temp[256];
-		size=zfile-file-1;
-		memcpy(temp,file,size);
-		temp[size]=0;
-		fp=l_file_vopen(temp,"rb",ap,NULL);
-		if(!fp) return NULL;
-		contents=l_zip_file_get_contents(fp,zfile,length);
-		fclose(fp);
-		return contents;
-	}
-	else
-	{
-		fp=l_file_vopen(file,"rb",ap,&size);
-		if(!fp) return NULL;
-		contents=l_alloc(size+1);
-		fread(contents,size,1,fp);
-		fclose(fp);
-		contents[size]=0;
-		if(length) *length=size;
-		return contents;
-	}
-}
-#else
 char *l_file_vget_contents(const char *file,size_t *length,va_list ap)
 {
 	FILE *fp;
 	char *path;
 	char *zfile=NULL;
-	char *res;
+	char *res=NULL;
 	do
 	{
 		char temp[256];
@@ -211,7 +177,6 @@ char *l_file_vget_contents(const char *file,size_t *length,va_list ap)
 	return res;
 }
 
-#endif
 char *l_file_get_contents(const char *file,size_t *length,...)
 {
 	char *contents;
