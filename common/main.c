@@ -2183,8 +2183,7 @@ int main(int arc,char *arg[])
 	
 	VERBOSE("ui init\n");
 
-	//clock_t start=clock();
-	y_ui_init(xim);
+	y_ui_init();
 	
 	VERBOSE("config path\n");
 

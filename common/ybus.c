@@ -636,7 +636,6 @@ int y_xim_init_default(Y_XIM *x)
 {
 	int ybus_xim_init(void);
 	int ybus_lcall_init(void);
-	int ybus_wayland_init(void);
 	
 	ybus_xim_init();
 	ybus_lcall_init();

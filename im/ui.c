@@ -1,8 +1,5 @@
 #include <gtk/gtk.h>
 #include <gdk/gdkx.h>
-#if GTK_CHECK_VERSION(3,0,0)
-#include <gdk/gdkwayland.h>
-#endif
 #include <cairo.h>
 #include <assert.h>
 #include <stdlib.h>
