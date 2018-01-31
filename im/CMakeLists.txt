@@ -6,7 +6,6 @@ if (UNIX)
     else()
         pkg_check_modules(Gtk REQUIRED IMPORTED_TARGET gtk+-3.0)
     endif()
-    pkg_check_modules(IBUS REQUIRED ibus-1.0)
 endif()
 
 if (UNIX)
@@ -21,14 +20,12 @@ set(SRCS ../common/main.c ../common/im.c
     ../common/keytool.c  ../common/keydesc.c
     ../common/select.c ../common/layout.c ../common/translate.c  ../common/ybus.c
     ../common/menu.c ../common/history.c ../common/replace.c
-    ybus-xim.c ybus-lcall.c ui.c xim-ibus.c  fbterm.c lcall.c fbterm/keycode.c ybus-wayland.c)
+    ybus-xim.c ybus-lcall.c ui.c lcall.c)
 
 add_executable(yong ${SRCS})
-target_compile_definitions(yong PRIVATE -DCFG_XIM_IBUS -DCFG_XIM_FBTERM -DL_CALL_GLIB_SERVER)
+target_compile_definitions(yong PRIVATE -DL_CALL_GLIB_SERVER)
 target_compile_options(yong PRIVATE -I${CMAKE_CURRENT_SOURCE_DIR} 
-    -I${CMAKE_CURRENT_SOURCE_DIR}/IMdkit 
-    -I${CMAKE_CURRENT_SOURCE_DIR}/fbterm
-    ${IBUS_CFLAGS})
+    -I${CMAKE_CURRENT_SOURCE_DIR}/IMdkit)
 
 
 if (UNIX)

@@ -83,9 +83,6 @@ void *y_dict_open(const char *file)
 	char line[512],*p;
 	char *key;
 
-	if(!strcmp(y_xim_get_name(),"fbterm"))
-		return 0;
-	
 	fp=l_file_open(file,"rb",y_im_get_path("HOME"),
 			y_im_get_path("DATA"),NULL);
 	if(!fp)

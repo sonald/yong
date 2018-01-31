@@ -7,7 +7,7 @@ option(USE_GTK2 "use gtk2 to build ui" OFF)
 
 # common flags used by all targets
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -O2 -fno-strict-aliasing -pipe")
-set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -Wall -g -O2 -fno-strict-aliasing -pipe")
+set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -Wall -g -Og -fno-strict-aliasing -pipe")
 if (UNIX)
     add_compile_options(-Wl,--hash-style=sysv)
 endif()

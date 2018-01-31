@@ -18,9 +18,6 @@
 #include "ui.h"
 #include "translate.h"
 
-#ifdef CFG_XIM_IBUS
-#include "xim-ibus.h"
-#endif
 
 #define FIX_CAIRO_LINETO
 
@@ -1793,8 +1790,6 @@ void YongSendFile(const char *fn)
 {
 	int len;
 	char *utf8;
-	if(!strcmp(y_xim_get_name(),"fbterm"))
-		return;
 	len=strlen(fn);
 	utf8=g_malloc(len*2+1);
 	y_im_str_encode(fn,utf8,0);
@@ -1817,9 +1812,6 @@ void YongSendClipboard(const char *s)
 	gchar *utf8;
 	int len;
 	
-	if(!strcmp(y_xim_get_name(),"fbterm"))
-		return;
-
 	len=strlen(s);
 	utf8=g_malloc(len*2+1);
 	y_im_str_encode(s,utf8,0);
@@ -2199,7 +2191,6 @@ static void ui_add_menu(ui_menu_t *m,GtkWidget *parent,const char *group)
 		if(!strcmp(exec,"$IMLIST"))
 		{
 			l_free(exec);
-			if(!xim_ibus_use_ibus_menu())
 			{
 				GtkWidget *me;
 				me=im_list_menu();

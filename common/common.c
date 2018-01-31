@@ -12,12 +12,6 @@
 #include "translate.h"
 #include "version.h"
 
-#ifdef CFG_XIM_IBUS
-#include "xim-ibus.h"
-#endif
-#ifdef CFG_XIM_FBTERM
-#include "fbterm.h"
-#endif
 #include "ybus.h"
 
 //#define memcpy(a,b,c) memmove(a,b,c)
@@ -36,20 +30,6 @@ int y_xim_init(const char *name)
 		int y_xim_init_default(Y_XIM *x);
 		y_xim_init_default(&xim);
 	}
-#ifdef CFG_XIM_IBUS
-	else if(!strcmp(name,"ibus"))
-	{
-		int y_xim_init_ibus(Y_XIM *x);
-		y_xim_init_ibus(&xim);
-	}
-#endif
-#ifdef CFG_XIM_FBTERM
-	else if(!strcmp(name,"fbterm"))
-	{
-		int y_xim_init_fbterm(Y_XIM *x);
-		y_xim_init_fbterm(&xim);
-	}
-#endif
 	if(!xim.init)
 		return -1;
 	else
@@ -413,20 +393,9 @@ void y_xim_enable(int enable)
 }
 
 Y_UI y_ui;
-int y_ui_init(const char *name)
+int y_ui_init()
 {
-#ifdef CFG_XIM_FBTERM
-	if(name && !strcmp(name,"fbterm"))
-	{
-		ui_setup_fbterm(&y_ui);
-	}
-	else
-	{
-		ui_setup_default(&y_ui);
-	}
-#else
 	ui_setup_default(&y_ui);
-#endif	
 	return y_ui.init();
 }
 

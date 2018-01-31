@@ -2173,49 +2173,17 @@ int main(int arc,char *arg[])
 		{
 			xim="ybus";
 		}
-#ifdef CFG_XIM_IBUS
-		else if(!strcmp(arg[i],"--ibus"))
-		{
-			xim="ibus";
-		}
-		else if(!strcmp(arg[i],"--xml"))
-		{
-			extern void xim_ibus_output_xml(void);
-			y_ui_init(xim);
-			y_im_config_path();
-			y_im_update_main_config();
-			xim_ibus_output_xml();
-			exit(0);
-		}
-		else if(!strcmp(arg[i],"--ibus-menu"))
-		{
-			extern void xim_ibus_menu_enable(int enable);
-			xim_ibus_menu_enable(1);
-		}
-#endif
 		else if(!strcmp(arg[i],"--tool=libmb.so"))
 		{
 			mb_tool=1;
 			arc-=i+1;
 			arg+=i+1;
 		}
-#if 0
-		else if(arc==3 && i==1 &&
-				arg[i][0]=='-' && arg[i][1]=='M' && arg[i][2]=='a' && arg[i][3]=='c')
-		{
-			extern int y_im_mac_force;
-			y_im_mac_force=atoi(arg[2]);
-		}
-#endif
 	}
 	
 	VERBOSE("ui init\n");
 
 	//clock_t start=clock();
-#ifdef CFG_XIM_FBTERM
-	if(getenv("FBTERM_IM_SOCKET"))
-		xim="fbterm";
-#endif
 	y_ui_init(xim);
 	
 	VERBOSE("config path\n");
@@ -2256,7 +2224,7 @@ int main(int arc,char *arg[])
 	y_im_load_book();
 	y_im_history_init();
 	
-	if(!xim || strcmp(xim,"fbterm"))
+	if(!xim)
 	{
 		VERBOSE("load dict\n");
 		local_dic=y_dict_open("dict.txt");
@@ -2304,7 +2272,7 @@ int main(int arc,char *arg[])
 
 int y_main_init(int index)
 {
-	y_ui_init(NULL);
+	y_ui_init();
 	y_im_config_path();
 	y_im_update_main_config();
 	tip_main=y_im_get_config_int("main","tip");
