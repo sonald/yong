@@ -1,5 +1,5 @@
 file(GLOB SRCS LIST_DIRECTORIES false *.c)
-list(APPEND SRCS ../common/trie.c)
+list(APPEND SRCS ../common/trie.c ../common/pinyin.c)
 
 add_library(cloud SHARED ${SRCS})
 target_link_libraries(cloud l)

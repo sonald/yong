@@ -29,11 +29,12 @@ else()
     endif()
 endif()
 
-include_directories(${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/common)
+include_directories(${PROJECT_SOURCE_DIR}/include)
 
-#todo: build multi lib
 add_subdirectory(llib)
+add_subdirectory(py)
 add_subdirectory(gbk)
+include_directories(${PROJECT_SOURCE_DIR}/common)
 add_subdirectory(cloud)
 add_subdirectory(config)
 add_subdirectory(im)
