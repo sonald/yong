@@ -1029,7 +1029,6 @@ static int SGY_GetCandWords(int mode)
 		return IMR_PASS;
 		
 	max=EIM.CandWordMax;
-	EIM.CandWordMaxReal=max;
 	
 	if(mode==PAGE_FIRST)
 	{

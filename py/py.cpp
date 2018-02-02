@@ -70,6 +70,29 @@ void PY_Reset(void)
 	EIM.SelectIndex=0;
 }
 
+static int CloudMoveCaretTo(int key)
+{
+	int i,p;
+	if(EIM.CodeLen<1)
+		return 0;
+	if(key>='A' && key<='Z')
+		key='a'+(key-'A');
+	for(i=0,p=EIM.CaretPos+1;i<EIM.CodeLen;i++)
+	{
+		if(p&0x01)
+			p++;
+		if(p>=EIM.CodeLen)
+			p=0;
+		if(EIM.CodeInput[p]==key)
+		{
+			EIM.CaretPos=p;
+			break;
+		}
+		p++;
+	}
+	return 0;
+}
+
 static char *u2gb(const char *u)
 {
 	char data[256];
@@ -94,8 +117,11 @@ int PY_GetCandWords(int mode)
 
     guint len = 0;
     pinyin_get_n_candidate(CTX.py_instance, &len);
-    EIM.CandWordCount = MIN(EIM.CandWordMax, len);
-    for (size_t i = 0; i < MIN(EIM.CandWordMax, len); ++i) {
+
+    EIM.CandWordCount = MIN(len, EIM.CandWordMax);
+    EIM.CandPageCount = len / EIM.CandWordMax + (len % EIM.CandWordMax > 0);
+
+    for (size_t i = 0; i < EIM.CandWordCount; ++i) {
         lookup_candidate_t * candidate = NULL;
         pinyin_get_candidate(CTX.py_instance, i, &candidate);
 
@@ -136,10 +162,37 @@ int PY_DoInput(int key)
         EIM.CodeInput[EIM.CaretPos++] = key;
         EIM.CodeLen++;
         EIM.CodeInput[EIM.CodeLen] = 0;
+        EIM.CaretPos = EIM.CodeLen;
 
         PY_GetCandWords(0);
         return IMR_DISPLAY;
+
+    } else if (key>='A' && key<='Z') {
+		if(EIM.CodeLen>=1)
+			CloudMoveCaretTo(key);
+		else
+			return IMR_NEXT;
+
+	} else if (key == YK_BACKSPACE) {
+        if (EIM.CaretPos == 0) {
+            return IMR_BLOCK;
+        }
+
+        for (int i = EIM.CaretPos-1; i < EIM.CodeLen; i++) {
+            EIM.CodeInput[i] = EIM.CodeInput[i+1];
+        }
+        EIM.CaretPos--;
+        EIM.CodeLen--;
+
+    } else if (key == YK_LEFT || key == YK_RIGHT) {
+        if (key == YK_LEFT) {
+            EIM.CaretPos = MAX(EIM.CaretPos-1, 0);
+        } else {
+            EIM.CaretPos = MIN(EIM.CaretPos+1, EIM.CodeLen);
+        }
+    } else {
+        return IMR_NEXT;
     }
-    return IMR_NEXT;
+    return IMR_DISPLAY;
 }
 

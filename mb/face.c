@@ -666,7 +666,6 @@ static int TableGetCandWords(int mode)
 	max=EIM.CandWordMax;
 	if(mb->ass==active && cand_a)
 		max=cand_a;
-	EIM.CandWordMaxReal=max;
 	if(mode==PAGE_FIRST)
 	{
 		EIM.CandPageCount=PhraseListCount/max+((PhraseListCount%max)?1:0);
@@ -1089,7 +1088,7 @@ static int TableDoInput(int key)
 		if(CodeTips[EIM.SelectIndex][0]=='\0')
 		{
 			char phrase[Y_MB_DATA_SIZE+1];
-			int pos=EIM.CandWordMaxReal*EIM.CurCandPage+EIM.SelectIndex;
+			int pos=EIM.CandWordMax*EIM.CurCandPage+EIM.SelectIndex;
 			y_mb_get(mb,pos,1,&phrase,&code);
 			if(strcmp(EIM.CandTable[EIM.SelectIndex],phrase))
 			{
@@ -1102,12 +1101,12 @@ static int TableDoInput(int key)
 					else
 					{
 						EIM.CurCandPage--;
-						EIM.SelectIndex=EIM.CandWordMaxReal-1;
+						EIM.SelectIndex=EIM.CandWordMax-1;
 					}
 				}
 				else
 				{
-					if(EIM.SelectIndex==EIM.CandWordMaxReal-1)
+					if(EIM.SelectIndex==EIM.CandWordMax-1)
 					{
 						EIM.SelectIndex=0;
 						EIM.CurCandPage++;
@@ -1929,7 +1928,6 @@ static int AssistDoSearch(void)
 	int max;
 	PhraseListCount=y_mb_set(mb,EIM.CodeInput,EIM.CodeLen,hz_filter_temp);
 	max=EIM.CandWordMax;
-	EIM.CandWordMaxReal=max;
 	EIM.CandPageCount=PhraseListCount/max+((PhraseListCount%max)?1:0);
 	PredictPhrase[0]=0;
 	PredictCount=0;
@@ -2112,7 +2110,6 @@ static int SPDoSearch(int adjust)
 		PhraseListCount=y_mb_set(mb,code,strlen(code),hz_filter_temp);
 		HaveResult=PhraseListCount>0;
 		max=EIM.CandWordMax;
-		EIM.CandWordMaxReal=max;
 		EIM.CandPageCount=PhraseListCount/max+((PhraseListCount%max)?1:0);
 	}
 	PinyinAddSpace();
@@ -2135,7 +2132,6 @@ static int SPDoSearch(int adjust)
 		}*/
 		PhraseListCount+=PredictCount;
 		max=EIM.CandWordMax;
-		EIM.CandWordMaxReal=max;
 		EIM.CandPageCount=PhraseListCount/max+((PhraseListCount%max)?1:0);
 	}
 	if(CodeMatch>2)
@@ -2148,7 +2144,6 @@ static int SPDoSearch(int adjust)
 			strcpy(ExtraZi.pinyin,temp);
 			PhraseListCount+=ExtraZi.count;
 			max=EIM.CandWordMax;
-			EIM.CandWordMaxReal=max;
 			EIM.CandPageCount=PhraseListCount/max+((PhraseListCount%max)?1:0);
 		}
 	}
@@ -2278,7 +2273,6 @@ static int PinyinDoSearch(int adjust)
 		}
 		HaveResult=PhraseListCount>0;
 		max=EIM.CandWordMax;
-		EIM.CandWordMaxReal=max;
 		EIM.CandPageCount=PhraseListCount/max+((PhraseListCount%max)?1:0);
 	}
 	PinyinAddSpace();
@@ -2302,7 +2296,6 @@ static int PinyinDoSearch(int adjust)
 		y_mb_pop_context(mb,&ctx);
 		PhraseListCount+=PredictCount;
 		max=EIM.CandWordMax;
-		EIM.CandWordMaxReal=max;
 		EIM.CandPageCount=PhraseListCount/max+((PhraseListCount%max)?1:0);
 	}
 
@@ -2345,7 +2338,6 @@ static int PinyinDoSearch(int adjust)
 			ExtraZi.pinyin[i]=0;
 			PhraseListCount+=ExtraZi.count;
 			max=EIM.CandWordMax;
-			EIM.CandWordMaxReal=max;
 			EIM.CandPageCount=PhraseListCount/max+((PhraseListCount%max)?1:0);
 		}
 	}
@@ -2555,7 +2547,6 @@ static int PinyinGetCandwords(int mode)
 		active=Y_MB_ACTIVE(mb);
 
 	max=EIM.CandWordMax;
-	EIM.CandWordMaxReal=max;
 
 	if(mode==PAGE_LEGEND)
 	{

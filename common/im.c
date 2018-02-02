@@ -58,7 +58,6 @@ int InitExtraIM(IM *im,EXTRA_IM *eim,const char *arg)
 	eim->GetSelect=y_ui.get_select;
 	eim->GetPath=y_im_get_path;
 	eim->CandWordMax=im->CandWord;
-	eim->CandWordMaxReal=im->CandWord;
 	eim->CaretPos=-1;
 	eim->GetConfig=eim_get_config;
 	eim->GetKey=y_im_str_to_key;

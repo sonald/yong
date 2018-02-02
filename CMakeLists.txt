@@ -4,6 +4,7 @@ project(yong)
 option(TOOL_BIHUA "build tool bihua" OFF)
 option(USE_GTK2 "use gtk2 to build ui" OFF)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS on)
 
 # common flags used by all targets
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -O2 -fno-strict-aliasing -pipe")

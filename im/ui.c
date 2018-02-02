@@ -666,8 +666,6 @@ static gboolean input_click_cb (GtkWidget *window,GdkEventButton *event,gpointer
 					else
 					{
 						char *p=eim->CodeInput;
-						//p=y_im_key_desc_translate(p,eim->CandTable[eim->SelectIndex]);
-						//y_im_str_encode(p,im.CodeInput,DONT_ESCAPE);
 						y_im_key_desc_translate(p,0,eim->CandTable[eim->SelectIndex],im.CodeInput,MAX_CODE_LEN+1);
 						y_im_str_encode(eim->StringGet,im.StringGet,0);
 						//YongDrawInput();
@@ -1347,7 +1345,6 @@ int YongCandWidth(void)
 		pos[2]=cur;
 		if(im.Hint)
 		{
-			//char *t=eim->CodeTips[i];
 			char *t=im.CodeTips[i];
 			if(t && *t)
 			{

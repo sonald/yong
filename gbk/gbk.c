@@ -2,12 +2,23 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define YONG_IM_ENGINE
 #include "yong.h"
 #include "gbk.h"
 #include "llib.h"
 
-//static int PhraseListCount;
+
+#define CodeInput EIM.CodeInput
+#define StringGet EIM.StringGet
+#define CandTable EIM.CandTable
+#define CodeTips EIM.CodeTips
+#define CodeLen EIM.CodeLen
+#define CandWordMax EIM.CandWordMax
+#define CurCandPage EIM.CurCandPage
+#define CandWordCount EIM.CandWordCount
+#define CandPageCount EIM.CandPageCount
+#define SelectIndex EIM.SelectIndex
+#define CaretPos EIM.CaretPos
+
 #define PhraseListCount EIM.CandWordTotal
 static const char tip[16]="0123456789abcdef";
 
@@ -71,7 +82,6 @@ static int GbkGetCandWords(int mode)
 	if(CurCandPage<CandPageCount-1)
 		CandWordCount=CandWordMax;
 	else CandWordCount=PhraseListCount-CandWordMax*(CandPageCount-1);
-	EIM.CandWordMaxReal=CandWordMax;
 
 	for(i=0;i<CandWordMax;i++)
 	{

@@ -102,7 +102,7 @@ static int AutoCompleteByDict(int index)
 	if(EIM.CandWordCount==0 || eim_dict.Count==0)
 		return 0;
 	char *phrase=&EIM.CandTable[index][0];
-	int pos=EIM.CandWordMaxReal*EIM.CurCandPage+index;
+	int pos=EIM.CandWordMax*EIM.CurCandPage+index;
 	int i;
 	
 	for(i=0;i<ENIM_COUNT;i++)
@@ -161,7 +161,6 @@ static int EnglishGetCandWords(int mode)
 		return IMR_BLOCK;
 		
 	max=EIM.CandWordMax;
-	EIM.CandWordMaxReal=max;
 	
 	if(mode==PAGE_FIRST) EIM.CurCandPage=0;
 	else if(mode==PAGE_NEXT && EIM.CurCandPage+1<EIM.CandPageCount)

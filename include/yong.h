@@ -71,7 +71,6 @@ typedef struct {
 	/* interface defined by platform */
 	int CandWordMax;
 	int CodeLen;
-	int CandWordMaxReal;
 	int CurCandPage;
 	int CandWordTotal;
 	int CandWordCount;
@@ -98,22 +97,6 @@ typedef struct {
 	const char *(*Translate)(const char *s);
 	void (*Log)(const char *fmt,...);
 }EXTRA_IM;
-
-#ifdef YONG_IM_ENGINE
-
-#define CodeInput EIM.CodeInput
-#define StringGet EIM.StringGet
-#define CandTable EIM.CandTable
-#define CodeTips EIM.CodeTips
-#define CodeLen EIM.CodeLen
-#define CandWordMax EIM.CandWordMax
-#define CurCandPage EIM.CurCandPage
-#define CandWordCount EIM.CandWordCount
-#define CandPageCount EIM.CandPageCount
-#define SelectIndex EIM.SelectIndex
-#define CaretPos EIM.CaretPos
-
-#endif/*YONG_IM_ENGINE*/
 
 #define IM_FLAG_ASYNC		0x01
 #define IM_FLAG_CAPITAL		0x02
